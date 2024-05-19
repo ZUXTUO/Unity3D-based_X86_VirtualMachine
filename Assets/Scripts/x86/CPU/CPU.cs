@@ -22,7 +22,6 @@ namespace x86CS.CPU
         private int codeSize = 16;
         private Disassembler disasm;
         private Operand interruptOperand;
-        public bool Logging;
 
         public bool Halted { get; private set; }
         public uint CurrentAddr { get; private set; }
@@ -841,12 +840,9 @@ namespace x86CS.CPU
 
         private void DumpRegisters()
         {
-            if (Logging)
-            {
-                UnityEngine.Debug.Log(String.Format("AX {0:X4} BX {1:X4} CX {2:X4} DX {3:X4}", AX, BX, CX, DX));
-                UnityEngine.Debug.Log(String.Format("SI {0:X4} DI {1:X4} SP {2:X4} BP {3:X4}", SI, DI, SP, BP));
-                UnityEngine.Debug.Log(String.Format("CS {0:X4} DS {1:X4} ES {2:X4} SS {3:X4}", CS, DS, ES, SS));
-            }
+            UnityEngine.Debug.Log(String.Format("AX {0:X4} BX {1:X4} CX {2:X4} DX {3:X4}", AX, BX, CX, DX));
+            UnityEngine.Debug.Log(String.Format("SI {0:X4} DI {1:X4} SP {2:X4} BP {3:X4}", SI, DI, SP, BP));
+            UnityEngine.Debug.Log(String.Format("CS {0:X4} DS {1:X4} ES {2:X4} SS {3:X4}", CS, DS, ES, SS));
         }
 
         public void ExecuteInterrupt(byte vector)
@@ -875,6 +871,7 @@ namespace x86CS.CPU
                 return;
 
             CurrentAddr = segments[(int)SegmentRegister.CS].GDTEntry.BaseAddress + EIP;
+            //CurrentAddr = (UnityMain.machine.CPU.CS << 4) + UnityMain.machine.CPU.IP;
             disasm.CodeSize = codeSize;
             OpLen = disasm.Disassemble(CurrentAddr, doStrings);
             opSize = disasm.OperandSize;
@@ -889,20 +886,12 @@ namespace x86CS.CPU
 
         public void Cycle()
         {
-            Cycle(false);
-        }
-
-        public void Cycle(bool logging)
-        {
             if (Halted)
                 return;
 
-            Logging = logging;
-
             Operand[] operands = ProcessOperands();
 
-            if (logging)
-                UnityEngine.Debug.Log(String.Format("{0:X}:{1:X} {2}", CS, EIP, disasm.InstructionText));
+            UnityEngine.Debug.Log(String.Format("{0:X}:{1:X} {2}", CS, EIP, disasm.InstructionText));
 
             EIP += (uint)OpLen;
             disasm.Execute(operands);

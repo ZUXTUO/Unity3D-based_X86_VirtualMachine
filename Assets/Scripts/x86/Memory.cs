@@ -26,7 +26,11 @@ namespace x86CS
 
         public static void BlockWrite(uint addr, byte[] buffer, int length)
         {
-            UnityEngine.Debug.Log(String.Format("Block write {0:X} length {1:X} ends {2:X}", addr, length, addr + length));
+            if (UnityManager.ins.LogOutput)
+            {
+                UnityEngine.Debug.Log(String.Format("Block write {0:X} length {1:X} ends {2:X}", addr, length, addr + length));
+            }
+                
             int int_addr = (int)addr;
             UnityEngine.Debug.Log("addr: " + int_addr);
 
@@ -49,7 +53,10 @@ namespace x86CS
         {
             Buffer.BlockCopy(memory, (int)addr, buffer, 0, length);
 
-            UnityEngine.Debug.Log(String.Format("Block read {0:X} length {1:X} ends {2:X}", addr, length, addr + length));
+            if (UnityManager.ins.LogOutput)
+            {
+                UnityEngine.Debug.Log(String.Format("Block read {0:X} length {1:X} ends {2:X}", addr, length, addr + length));
+            }
 
             return buffer.Length;
         }
@@ -84,7 +91,10 @@ namespace x86CS
                     break;
             }
 
-            UnityEngine.Debug.Log(String.Format("Read {0} address {1:X} value {2:X}{3}", size, addr, ret, passedMem ? " (OverRead)" : ""));
+            if (UnityManager.ins.LogOutput)
+            {
+                UnityEngine.Debug.Log(String.Format("Read {0} address {1:X} value {2:X}{3}", size, addr, ret, passedMem ? " (OverRead)" : ""));
+            }
 
             return ret;
         }
@@ -93,11 +103,17 @@ namespace x86CS
         {
             if (addr > MemoryArray.Length)
             {
-                UnityEngine.Debug.Log(String.Format("Write {0} address {1:X} value {2:X} (OverWrite, ignored)", size, addr, value));
+                if (UnityManager.ins.LogOutput)
+                {
+                    UnityEngine.Debug.Log(String.Format("Write {0} address {1:X} value {2:X} (OverWrite, ignored)", size, addr, value));
+                }
                 return;
             }
 
-            UnityEngine.Debug.Log(String.Format("Write {0} address {1:X} value {2:X}", size, addr, value));
+            if (UnityManager.ins.LogOutput)
+            {
+                UnityEngine.Debug.Log(String.Format("Write {0} address {1:X} value {2:X}", size, addr, value));
+            }
 
             switch (size)
             {
@@ -115,6 +131,37 @@ namespace x86CS
                     memory[addr + 3] = (byte)(value >> 24);
                     break;
             }
+        }
+
+
+        public static void Load()
+        {
+            int startIndex = 0x7c00;
+            int length = 512;
+
+            // Check if the byte array is large enough
+            if (startIndex + length > memory.Length)
+            {
+                UnityEngine.Debug.LogError("Index out of range.");
+                return;
+            }
+
+            // Create a new StringBuilder to store the printed bytes
+            System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder();
+
+            // Append bytes to the StringBuilder
+            for (int i = startIndex; i < startIndex + length; i++)
+            {
+                stringBuilder.Append(memory[i].ToString("X2")); // Append byte in hexadecimal format
+                stringBuilder.Append(" "); // Add a space between each byte
+            }
+
+            // Print the bytes
+            UnityEngine.Debug.Log(stringBuilder.ToString());
+
+            // Save the bytes to a txt file
+            string filePath = UnityEngine. Application.dataPath + "/Bytes.txt";
+            File.WriteAllText(filePath, stringBuilder.ToString());
         }
     }
 }

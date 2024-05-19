@@ -15,12 +15,20 @@ public class UnityManager : MonoBehaviour
         DiskLoad();//载入虚拟硬盘信息
     }
 
-    public string ImageName;//镜像名
-    public string BiosName;//BIOS名
-    public string VgaBiosName;//VGABIOS名
-    public DiskElement[] Disks;//虚拟硬盘
-    public int MemorySize = 256;//运存大小
-    public x86CS.Configuration.DriveType Type;//驱动属性
+    [Header("镜像名")]
+    public string ImageName;
+    [Header("BIOS名")]
+    public string BiosName;
+    [Header("VGABIOS名")]
+    public string VgaBiosName;
+    [Header("虚拟硬盘")]
+    public DiskElement[] Disks;
+    [Header("运存大小")]
+    public int MemorySize = 256;
+    [Header("驱动属性")]
+    public x86CS.Configuration.DriveType Type;
+    [Header("额外日志输出")]
+    public bool LogOutput = true;
 
     /// <summary>
     /// 载入虚拟硬盘信息

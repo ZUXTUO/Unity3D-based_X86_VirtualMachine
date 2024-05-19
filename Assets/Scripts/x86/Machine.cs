@@ -60,7 +60,8 @@ namespace x86CS
             CPU.IORead += CPUIORead;
             CPU.IOWrite += CPUIOWrite;
         }
-
+        
+        /*
         void GUIKeyUp(object sender, UIntEventArgs e)
         {
             keyboard.KeyUp(e.Number);
@@ -70,6 +71,7 @@ namespace x86CS
         {
             keyboard.KeyPress(e.Number);
         }
+        */
 
         void PicDeviceInterrupt(object sender, InterruptEventArgs e)
         {
@@ -118,8 +120,10 @@ namespace x86CS
             IOEntry entry;
 
             var ret = (ushort)(!ioPorts.TryGetValue(addr, out entry) ? 0xffff : entry.Read(addr, size));
-            if (CPU.Logging)
+            if (UnityManager.ins.LogOutput)
+            {
                 UnityEngine.Debug.Log(String.Format("IO Read Port {0:X}, Value {1:X}", addr, ret));
+            }
 
             return ret;
         }
@@ -131,8 +135,10 @@ namespace x86CS
             if (ioPorts.TryGetValue(addr, out entry))
                 entry.Write(addr, value, size);
 
-            if (CPU.Logging)
+            if (UnityManager.ins.LogOutput)
+            {
                 UnityEngine.Debug.Log(String.Format("IO Write Port {0:X}, Value {1:X}", addr, value));
+            }
         }
 
         private void LoadBIOS()
@@ -220,7 +226,7 @@ namespace x86CS
 
         public void Start()
         {
-            int addr = (int)((CPU.CS << 4) + CPU.IP);
+            //int addr = (int)((CPU.CS << 4) + CPU.IP);
 
             CPU.Fetch(true);
         }
@@ -257,7 +263,7 @@ namespace x86CS
         public void RunCycle(bool logging, bool stepping)
         {
             isStepping = stepping;
-            CPU.Cycle(logging);
+            CPU.Cycle();
             CPU.Fetch(logging);
             picDevice.RunController();
             keyboard.Cycle();
