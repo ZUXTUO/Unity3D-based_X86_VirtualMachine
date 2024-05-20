@@ -26,13 +26,13 @@ namespace x86CS
 
         public static void BlockWrite(uint addr, byte[] buffer, int length)
         {
+            int int_addr = (int)addr;
+
             if (UnityManager.ins.LogOutput)
             {
                 UnityEngine.Debug.Log(String.Format("Block write {0:X} length {1:X} ends {2:X}", addr, length, addr + length));
+                UnityEngine.Debug.Log("addr: " + int_addr);
             }
-                
-            int int_addr = (int)addr;
-            UnityEngine.Debug.Log("addr: " + int_addr);
 
             // 确保目标内存区域足够大，以便容纳要复制的数据
             if (memory.Length - int_addr < length)
@@ -40,10 +40,6 @@ namespace x86CS
                 UnityEngine.Debug.Log("内存大小："+ memory.Length);
                 UnityEngine.Debug.Log("没有足够空间，尝试重新分配");
                 memory = new byte[UnityManager.ins.MemorySize * 1024 * 1024];
-            }
-            else
-            {
-                UnityEngine.Debug.Log("内存足够");
             }
 
             Buffer.BlockCopy(buffer, 0, memory, int_addr, length);
@@ -139,27 +135,22 @@ namespace x86CS
             int startIndex = 0x7c00;
             int length = 512;
 
-            // Check if the byte array is large enough
             if (startIndex + length > memory.Length)
             {
                 UnityEngine.Debug.LogError("Index out of range.");
                 return;
             }
 
-            // Create a new StringBuilder to store the printed bytes
             System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder();
 
-            // Append bytes to the StringBuilder
             for (int i = startIndex; i < startIndex + length; i++)
             {
-                stringBuilder.Append(memory[i].ToString("X2")); // Append byte in hexadecimal format
-                stringBuilder.Append(" "); // Add a space between each byte
+                stringBuilder.Append(memory[i].ToString("X2"));
+                stringBuilder.Append(" ");
             }
 
-            // Print the bytes
-            UnityEngine.Debug.Log(stringBuilder.ToString());
+            UnityEngine.Debug.LogError("打印成功");
 
-            // Save the bytes to a txt file
             string filePath = UnityEngine. Application.dataPath + "/Bytes.txt";
             File.WriteAllText(filePath, stringBuilder.ToString());
         }

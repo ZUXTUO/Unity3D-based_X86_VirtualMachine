@@ -7,7 +7,8 @@ using System.Threading;
 public class UnityMain : MonoBehaviour
 {
     public Machine machine;
-    public bool CPU_Timer = false;
+    public Thread thread;
+    public bool CPU_Run = true;
 
     /// <summary>
     /// 开机
@@ -18,7 +19,23 @@ public class UnityMain : MonoBehaviour
         UnityManager.ins.MemorySize = 256;
         machine.Running = true;
         machine.Start();
-        CPU_Timer = true;
+        thread = new Thread(() =>
+        {
+            while (CPU_Run)
+            {
+                machine.RunCycle();
+            }
+        });
+        thread.Start();
+    }
+
+    /// <summary>
+    /// 关闭
+    /// </summary>
+    public void OnApplicationQuit()
+    {
+        CPU_Run = false;
+        thread.Join();
     }
 
     /// <summary>
@@ -27,17 +44,5 @@ public class UnityMain : MonoBehaviour
     public void Out()
     {
         Memory.Load();
-    }
-
-    /// <summary>
-    /// CPU时钟（伪装）
-    /// </summary>
-    public void Update()
-    {
-        if (CPU_Timer)
-        {
-            machine.CPU.Fetch();
-            machine.RunCycle();
-        }
     }
 }

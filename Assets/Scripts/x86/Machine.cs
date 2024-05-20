@@ -39,6 +39,8 @@ namespace x86CS
 
         public Machine()
         {
+            UnityEngine.Debug.Log("初始化");
+
             picDevice = new PIC8259();
             vgaDevice = new VGA();
             FloppyDrive = new Floppy();
@@ -59,8 +61,10 @@ namespace x86CS
 
             CPU.IORead += CPUIORead;
             CPU.IOWrite += CPUIOWrite;
+
+            //picDevice.OnInterrupt();
         }
-        
+
         /*
         void GUIKeyUp(object sender, UIntEventArgs e)
         {
@@ -75,6 +79,8 @@ namespace x86CS
 
         void PicDeviceInterrupt(object sender, InterruptEventArgs e)
         {
+            UnityEngine.Debug.Log("PicDeviceInterrupt");
+
             if (CPU.IF)
             {
                 uint currentAddr = (uint)(CPU.GetSelectorBase(x86Disasm.SegmentRegister.CS) + CPU.EIP);
@@ -120,6 +126,7 @@ namespace x86CS
             IOEntry entry;
 
             var ret = (ushort)(!ioPorts.TryGetValue(addr, out entry) ? 0xffff : entry.Read(addr, size));
+
             if (UnityManager.ins.LogOutput)
             {
                 UnityEngine.Debug.Log(String.Format("IO Read Port {0:X}, Value {1:X}", addr, ret));
@@ -143,6 +150,8 @@ namespace x86CS
 
         private void LoadBIOS()
         {
+            UnityEngine.Debug.Log("载入BIOS");
+
             //FileStream biosStream = File.OpenRead("BIOS-bochs-latest");
             var buffer = new byte[UnityManager.ins.Bios_stream.Length];
 
@@ -157,6 +166,8 @@ namespace x86CS
 
         private void LoadVGABios()
         {
+            UnityEngine.Debug.Log("载入VGABios");
+
             //FileStream biosStream = File.OpenRead("VGABIOS-lgpl-latest");
             var buffer = new byte[UnityManager.ins.VgaBios_stream.Length];
 
@@ -181,10 +192,14 @@ namespace x86CS
                 INeedsDMA dmaDevice = device as INeedsDMA;
 
                 if (irqDevice != null)
+                {
                     irqDevice.IRQ += IRQRaised;
+                }
 
                 if (dmaDevice != null)
+                {
                     dmaDevice.DMA += DMARaised;
+                }
 
                 foreach (int port in device.PortsUsed)
                     SetupIOEntry((ushort)port, device.Read, device.Write);

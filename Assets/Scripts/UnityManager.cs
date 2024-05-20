@@ -29,6 +29,8 @@ public class UnityManager : MonoBehaviour
     public x86CS.Configuration.DriveType Type;
     [Header("额外日志输出")]
     public bool LogOutput = true;
+    [Header("CPU日志输出")]
+    public bool CPU_LogOutput = true;
 
     /// <summary>
     /// 载入虚拟硬盘信息

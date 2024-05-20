@@ -840,9 +840,12 @@ namespace x86CS.CPU
 
         private void DumpRegisters()
         {
-            UnityEngine.Debug.Log(String.Format("AX {0:X4} BX {1:X4} CX {2:X4} DX {3:X4}", AX, BX, CX, DX));
-            UnityEngine.Debug.Log(String.Format("SI {0:X4} DI {1:X4} SP {2:X4} BP {3:X4}", SI, DI, SP, BP));
-            UnityEngine.Debug.Log(String.Format("CS {0:X4} DS {1:X4} ES {2:X4} SS {3:X4}", CS, DS, ES, SS));
+            if (UnityManager.ins.CPU_LogOutput)
+            {
+                UnityEngine.Debug.Log(String.Format("AX {0:X4} BX {1:X4} CX {2:X4} DX {3:X4}", AX, BX, CX, DX));
+                UnityEngine.Debug.Log(String.Format("SI {0:X4} DI {1:X4} SP {2:X4} BP {3:X4}", SI, DI, SP, BP));
+                UnityEngine.Debug.Log(String.Format("CS {0:X4} DS {1:X4} ES {2:X4} SS {3:X4}", CS, DS, ES, SS));
+            }
         }
 
         public void ExecuteInterrupt(byte vector)
@@ -891,9 +894,12 @@ namespace x86CS.CPU
 
             Operand[] operands = ProcessOperands();
 
-            UnityEngine.Debug.Log(String.Format("{0:X}:{1:X} {2}", CS, EIP, disasm.InstructionText));
+            if (UnityManager.ins.CPU_LogOutput)
+            {
+                UnityEngine.Debug.Log(String.Format("{0:X}:{1:X} {2}", CS, EIP, disasm.InstructionText));
+            }
 
-            EIP += (uint)OpLen;
+                EIP += (uint)OpLen;
             disasm.Execute(operands);
         }
     }
