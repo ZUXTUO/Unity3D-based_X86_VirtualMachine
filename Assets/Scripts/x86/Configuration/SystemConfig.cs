@@ -11,7 +11,7 @@ namespace x86CS.Configuration
     {
         None,
         HardDisk,
-        Floppy,
-        CDROM
+        CDROM,
+        //ALL
     }
 }

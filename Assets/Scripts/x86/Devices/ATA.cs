@@ -36,6 +36,19 @@ namespace x86CS.Devices
 
         public ATA()
         {
+            ATADrive newDrive;
+            if (UnityManager.ins.Type == DriveType.HardDisk)
+            {
+                newDrive = new HardDisk();
+                newDrive.LoadImage(UnityManager.ins.VHD_Path);
+                diskDrives.Add(newDrive);
+            }
+            else if (UnityManager.ins.Type == DriveType.CDROM)
+            {
+                newDrive = new CDROM();
+                newDrive.LoadImage(UnityManager.ins.ISO_Path);
+                diskDrives.Add(newDrive);
+            }
             /*
             foreach (DiskElement drive in SystemConfig.Machine.Disks)
             {

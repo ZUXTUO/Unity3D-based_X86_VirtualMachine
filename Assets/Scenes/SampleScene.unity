@@ -704,6 +704,11 @@ MonoBehaviour:
   BiosName: BIOS-bochs-latest
   VgaBiosName: VGABIOS-lgpl-latest
   MemorySize: 256
+  Type: 1
+  VHD_Name: TEST.vhd
+  VHD_Path: 
+  ISO_Name: bootdisk.iso
+  ISO_Path: 
 --- !u!4 &1024841403
 Transform:
   m_ObjectHideFlags: 0
