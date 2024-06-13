@@ -158,7 +158,7 @@ namespace x86CS.Devices
                         case 0x5d:
                             return 0x00;
                         default:
-                            System.Diagnostics.Debugger.Break();
+                            //System.Diagnostics.Debugger.Break();
                             break;
                     }
                     break;

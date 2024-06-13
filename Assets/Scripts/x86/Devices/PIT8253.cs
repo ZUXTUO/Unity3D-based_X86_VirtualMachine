@@ -55,7 +55,7 @@ namespace x86CS.Devices
                 case 0x61:
                     return (uint)((counters[0].Count & 1) << 4);
                 default:
-                    System.Diagnostics.Debugger.Break();
+                    //System.Diagnostics.Debugger.Break();
                     break;
             }
 

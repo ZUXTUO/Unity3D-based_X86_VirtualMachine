@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Collections.Generic;
 using x86Disasm;
 using System.Reflection;
-using System.Threading;
 
 namespace x86CS.CPU
 {
@@ -22,6 +20,7 @@ namespace x86CS.CPU
         private int codeSize = 16;
         private Disassembler disasm;
         private Operand interruptOperand;
+        public bool Logging;
 
         public bool Halted { get; private set; }
         public uint CurrentAddr { get; private set; }
@@ -402,14 +401,14 @@ namespace x86CS.CPU
             disasm.CodeSize = codeSize;
             ProcessOperations();
             realModeEntry = new GDTEntry
-            {
-                BaseAddress = 0,
-                Is32Bit = false,
-                IsAccessed = true,
-                IsCode = false,
-                Limit = 0xffff,
-                IsWritable = true
-            };
+                                {
+                                    BaseAddress = 0,
+                                    Is32Bit = false,
+                                    IsAccessed = true,
+                                    IsCode = false,
+                                    Limit = 0xffff,
+                                    IsWritable = true
+                                };
 
             Halted = false;
 
@@ -535,7 +534,7 @@ namespace x86CS.CPU
                             controlRegisters[operand.Register.Index] = operand.Value;
                             break;
                         default:
-                            System.Diagnostics.Debugger.Break();
+                            //System.Diagnostics.Debugger.Break();
                             break;
                     }
                     break;
@@ -543,7 +542,7 @@ namespace x86CS.CPU
                     SegWrite(operand.Memory.Segment, operand.Memory.Address, operand.Value, (int)operand.Size);
                     break;
                 default:
-                    System.Diagnostics.Debugger.Break();
+                    //System.Diagnostics.Debugger.Break();
                     break;
             }
         }
@@ -582,14 +581,14 @@ namespace x86CS.CPU
                             operand.Value = controlRegisters[operand.Register.Index];
                             break;
                         default:
-                            System.Diagnostics.Debugger.Break();
+                            //System.Diagnostics.Debugger.Break();
                             break;
                     }
                     break;
                 case OperandType.Memory:
                     if (operand.Memory.Base != GeneralRegister.None)
                     {
-                        if (operand.Memory.Size == 16)
+                        if(operand.Memory.Size == 16)
                             operand.Memory.Address = registers[(int)operand.Memory.Base].Word;
                         else
                             operand.Memory.Address = registers[(int)operand.Memory.Base].DWord;
@@ -602,22 +601,22 @@ namespace x86CS.CPU
 
                     if (operand.Memory.Index != GeneralRegister.None)
                     {
-                        if (operand.Memory.Size == 16)
+                        if(operand.Memory.Size == 16)
                             operand.Memory.Address += registers[(int)operand.Memory.Index].Word;
                         else
                             operand.Memory.Address += registers[(int)operand.Memory.Index].DWord;
                     }
 
-                    if (operand.Size == 16)
+                    if(operand.Size == 16)
                         operand.Memory.Address = (ushort)(operand.Memory.Address + operand.Memory.Displacement);
                     else
                         operand.Memory.Address = (uint)(operand.Memory.Address + operand.Memory.Displacement);
 
-                    if (disasm.CurrentOpCode != 0x8d)  // Don't try to read when it's a LEA instruction
+                    if(disasm.CurrentOpCode != 0x8d)  // Don't try to read when it's a LEA instruction
                         operand.Value = SegRead(operand.Memory.Segment, operand.Memory.Address, (int)operand.Size);
                     break;
                 default:
-                    System.Diagnostics.Debugger.Break();
+                    //System.Diagnostics.Debugger.Break();
                     break;
             }
 
@@ -643,19 +642,7 @@ namespace x86CS.CPU
 
         private uint DisassemblerRead(uint offset, int size)
         {
-            //if (!Memory.LoggingEnabled)
             return Memory.Read(CurrentAddr + offset, size);
-            //else
-            //{
-            //    uint ret;
-            //    bool log = Memory.LoggingEnabled;
-
-            //    Memory.LoggingEnabled = false;
-            //    ret = Memory.Read(CurrentAddr + offset, size);
-            //    Memory.LoggingEnabled = log;
-
-            //    return ret;
-            //}
         }
 
         private uint GetVirtualAddress(SegmentRegister segment, uint offset)
@@ -755,7 +742,7 @@ namespace x86CS.CPU
             else
             {
                 SP -= 2;
-                SegWriteWord(SegmentRegister.SS, SP, (ushort)value);
+                SegWriteWord(SegmentRegister.SS, SP, (ushort) value);
             }
         }
 
@@ -838,16 +825,6 @@ namespace x86CS.CPU
             BP = (ushort)StackPop();
         }
 
-        private void DumpRegisters()
-        {
-            if (UnityManager.ins.CPU_LogOutput)
-            {
-                UnityEngine.Debug.Log(String.Format("AX {0:X4} BX {1:X4} CX {2:X4} DX {3:X4}", AX, BX, CX, DX));
-                UnityEngine.Debug.Log(String.Format("SI {0:X4} DI {1:X4} SP {2:X4} BP {3:X4}", SI, DI, SP, BP));
-                UnityEngine.Debug.Log(String.Format("CS {0:X4} DS {1:X4} ES {2:X4} SS {3:X4}", CS, DS, ES, SS));
-            }
-        }
-
         public void ExecuteInterrupt(byte vector)
         {
             interruptOperand.Value = vector;
@@ -855,7 +832,6 @@ namespace x86CS.CPU
             if (Halted)
                 Halted = false;
 
-            DumpRegisters();
             opSize = PMode ? 32 : 16;
             addressSize = PMode ? 32 : 16;
             Interrupt(interruptOperand);
@@ -874,7 +850,6 @@ namespace x86CS.CPU
                 return;
 
             CurrentAddr = segments[(int)SegmentRegister.CS].GDTEntry.BaseAddress + EIP;
-            //CurrentAddr = (UnityMain.machine.CPU.CS << 4) + UnityMain.machine.CPU.IP;
             disasm.CodeSize = codeSize;
             OpLen = disasm.Disassemble(CurrentAddr, doStrings);
             opSize = disasm.OperandSize;
@@ -889,17 +864,19 @@ namespace x86CS.CPU
 
         public void Cycle()
         {
+            Cycle(false);
+        }
+
+        public void Cycle(bool logging)
+        {
             if (Halted)
                 return;
 
+            Logging = logging;
+
             Operand[] operands = ProcessOperands();
 
-            if (UnityManager.ins.CPU_LogOutput)
-            {
-                UnityEngine.Debug.Log(String.Format("{0:X}:{1:X} {2}", CS, EIP, disasm.InstructionText));
-            }
-
-                EIP += (uint)OpLen;
+            EIP += (uint)OpLen;
             disasm.Execute(operands);
         }
     }

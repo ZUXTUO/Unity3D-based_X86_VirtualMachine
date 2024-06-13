@@ -119,13 +119,13 @@ namespace x86CS.Devices
                 }
             }
         }
-
+        /*
         public void Cycle()
         {
             if (outputBuffer.Count != 0)
                 OnIRQ(new EventArgs());
         }
-
+        */
         public uint Read(ushort address, int size)
         {
             switch (address)
@@ -142,7 +142,7 @@ namespace x86CS.Devices
                 case 0x64:
                     return (ushort) statusRegister;
                 default:
-                    System.Diagnostics.Debugger.Break();
+                    //System.Diagnostics.Debugger.Break();
                     break;
             }
 

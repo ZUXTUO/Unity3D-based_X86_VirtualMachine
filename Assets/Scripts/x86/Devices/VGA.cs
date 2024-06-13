@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using System;
 
 namespace x86CS.Devices
 {
@@ -29,7 +28,6 @@ namespace x86CS.Devices
         private readonly byte[] dacColour;
         private readonly byte[] attributeControl;
         private readonly byte[] crtControl;
-        //private readonly Bitmap[] font;
 
         private byte miscOutputRegister;
         private byte featureControl;

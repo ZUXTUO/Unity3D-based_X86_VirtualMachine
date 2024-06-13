@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using x86CS.Configuration;
 
 namespace x86CS.Devices
 {
@@ -11,7 +12,7 @@ namespace x86CS.Devices
 
         private readonly byte[] data;
 
-        private FileStream floppyStream;
+        //private FileStream floppyStream;
         private BinaryReader floppyReader;
         private DORSetting digitalOutput;
         private MainStatus mainStatus;
@@ -67,16 +68,22 @@ namespace x86CS.Devices
 
         public bool MountImage(string imagePath)
         {
-            if (!File.Exists(imagePath))
-                return false;
-
             try
             {
-                floppyStream = File.OpenRead(imagePath);
-                floppyReader = new BinaryReader(floppyStream);
+                if (UnityManager.ins.Img_stream == null)
+                {
+                    UnityManager.ins.Img_stream = File.OpenRead(imagePath);
+                    UnityEngine.Debug.Log("导入软盘信息：" + imagePath);
+                }
+                else
+                {
+                    UnityEngine.Debug.Log("内存中已有数据");
+                }
+                floppyReader = new BinaryReader(UnityManager.ins.Img_stream);
             }
             catch (Exception)
             {
+                UnityEngine.Debug.Log("导入软盘有问题：" + imagePath);
                 return false;
             }
 
@@ -85,7 +92,6 @@ namespace x86CS.Devices
 
         private void Reset()
         {
-            UnityEngine.Debug.Log("Reset issued");
             digitalOutput &= ~DORSetting.Reset;
             OnIRQ(new EventArgs());
         }
@@ -98,10 +104,8 @@ namespace x86CS.Devices
             if (numSectors == -1)
                 numSectors = 1;
 
-            floppyStream.Seek(addr * 512, SeekOrigin.Begin);
+            UnityManager.ins.Img_stream.Seek(addr * 512, SeekOrigin.Begin);
             byte[] sector = floppyReader.ReadBytes(512 * numSectors);
-
-            UnityEngine.Debug.Log(String.Format("Reading {0} sectors from sector offset {1}", numSectors, addr));
 
             resultCount = 7;
             resultIdx = 0;
@@ -126,8 +130,11 @@ namespace x86CS.Devices
             switch (command)
             {
                 case FloppyCommand.Recalibrate:
-                    UnityEngine.Debug.Log("Recalibrate issued");
-                    floppyStream.Seek(0, SeekOrigin.Begin);
+                    MountImage(UnityManager.ins.ImagePath);
+                    if (UnityManager.ins.Img_stream.Length != 0)
+                    {
+                        UnityManager.ins.Img_stream.Seek(0, SeekOrigin.Begin);
+                    }
                     headPosition = 0;
                     currentCyl = 0;
                     statusZero = 0x20;
@@ -135,7 +142,6 @@ namespace x86CS.Devices
                     OnIRQ(new EventArgs());
                     break;
                 case FloppyCommand.SenseInterrupt:
-                    UnityEngine.Debug.Log("Sense interrupt isssued");
                     if (!interruptInProgress)
                         statusZero = 0x80;
                     interruptInProgress = false;
@@ -165,7 +171,7 @@ namespace x86CS.Devices
                     OnIRQ(new EventArgs());
                     break;
                 default:
-                    System.Diagnostics.Debugger.Break();
+                    //System.Diagnostics.Debugger.Break();
                     break;
             }
         }
@@ -203,7 +209,7 @@ namespace x86CS.Devices
                         paramCount = 8;
                         break;
                     default:
-                        System.Diagnostics.Debugger.Break();
+                        //System.Diagnostics.Debugger.Break();
                         break;
                 }
             }
@@ -225,7 +231,7 @@ namespace x86CS.Devices
                         mainStatus &= ~MainStatus.DIO;
                     return ret;
                 default:
-                    System.Diagnostics.Debugger.Break();
+                    //System.Diagnostics.Debugger.Break();
                     break;
             }
             return 0;
@@ -245,7 +251,7 @@ namespace x86CS.Devices
                     ProcessCommandAndArgs((ushort)value);
                     break;
                 default:
-                    System.Diagnostics.Debugger.Break();
+                    //System.Diagnostics.Debugger.Break();
                     break;
             }
         }

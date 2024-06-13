@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.IO;
 using x86CS.Configuration;
 
@@ -7,7 +6,7 @@ namespace x86CS
 {
     public class Memory
     {
-        private static byte[] memory;
+        private static readonly byte[] memory;
 
         public static bool A20 { get; set; }
         public static byte[] MemoryArray { get { return memory; } }
@@ -26,33 +25,12 @@ namespace x86CS
 
         public static void BlockWrite(uint addr, byte[] buffer, int length)
         {
-            int int_addr = (int)addr;
-
-            if (UnityManager.ins.LogOutput)
-            {
-                UnityEngine.Debug.Log(String.Format("Block write {0:X} length {1:X} ends {2:X}", addr, length, addr + length));
-                UnityEngine.Debug.Log("addr: " + int_addr);
-            }
-
-            // 确保目标内存区域足够大，以便容纳要复制的数据
-            if (memory.Length - int_addr < length)
-            {
-                UnityEngine.Debug.Log("内存大小："+ memory.Length);
-                UnityEngine.Debug.Log("没有足够空间，尝试重新分配");
-                memory = new byte[UnityManager.ins.MemorySize * 1024 * 1024];
-            }
-
-            Buffer.BlockCopy(buffer, 0, memory, int_addr, length);
+            Buffer.BlockCopy(buffer, 0, memory, (int)addr, length);
         }
 
         public static int BlockRead(uint addr, byte[] buffer, int length)
         {
             Buffer.BlockCopy(memory, (int)addr, buffer, 0, length);
-
-            if (UnityManager.ins.LogOutput)
-            {
-                UnityEngine.Debug.Log(String.Format("Block read {0:X} length {1:X} ends {2:X}", addr, length, addr + length));
-            }
 
             return buffer.Length;
         }
@@ -87,11 +65,6 @@ namespace x86CS
                     break;
             }
 
-            if (UnityManager.ins.LogOutput)
-            {
-                UnityEngine.Debug.Log(String.Format("Read {0} address {1:X} value {2:X}{3}", size, addr, ret, passedMem ? " (OverRead)" : ""));
-            }
-
             return ret;
         }
 
@@ -99,16 +72,7 @@ namespace x86CS
         {
             if (addr > MemoryArray.Length)
             {
-                if (UnityManager.ins.LogOutput)
-                {
-                    UnityEngine.Debug.Log(String.Format("Write {0} address {1:X} value {2:X} (OverWrite, ignored)", size, addr, value));
-                }
                 return;
-            }
-
-            if (UnityManager.ins.LogOutput)
-            {
-                UnityEngine.Debug.Log(String.Format("Write {0} address {1:X} value {2:X}", size, addr, value));
             }
 
             switch (size)
@@ -129,7 +93,9 @@ namespace x86CS
             }
         }
 
-
+        /// <summary>
+        /// 内存导出
+        /// </summary>
         public static void Load()
         {
             int startIndex = 0x7c00;
@@ -151,7 +117,7 @@ namespace x86CS
 
             UnityEngine.Debug.LogError("打印成功");
 
-            string filePath = UnityEngine. Application.dataPath + "/Bytes.txt";
+            string filePath = UnityEngine.Application.dataPath + "/Bytes.txt";
             File.WriteAllText(filePath, stringBuilder.ToString());
         }
     }

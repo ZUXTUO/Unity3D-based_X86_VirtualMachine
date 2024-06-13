@@ -324,7 +324,7 @@ namespace x86Disasm
                             ProcessRegMemControl(ref operand, argument, (byte)(rmByte >> 3));
                             break;
                         default:
-                            System.Diagnostics.Debugger.Break();
+                            //System.Diagnostics.Debugger.Break();
                             break;
                     }
                     break;
@@ -390,7 +390,7 @@ namespace x86Disasm
                         InstructionText += operand;
                     break;
                 default:
-                    System.Diagnostics.Debugger.Break();
+                    //System.Diagnostics.Debugger.Break();
                     break;
             }
 
@@ -428,7 +428,7 @@ namespace x86Disasm
             currentInstruction = instructions[opCode];
             offset++;
 
-            System.Diagnostics.Debug.Assert(opCode == currentInstruction.OpCode);
+            //System.Diagnostics.Debug.Assert(opCode == currentInstruction.OpCode);
 
             while (currentInstruction.Type == InstructionType.Prefix)
             {
@@ -479,7 +479,7 @@ namespace x86Disasm
 
                 opCode = (uint)((opCode << 8) + extended);
 
-                System.Diagnostics.Debug.Assert(opCode == currentInstruction.OpCode);
+                //System.Diagnostics.Debug.Assert(opCode == currentInstruction.OpCode);
             }
 
             if (currentInstruction.Type == InstructionType.Group)
@@ -495,11 +495,13 @@ namespace x86Disasm
 
                 opCode = (uint)((opCode << 8) + index);
 
-                System.Diagnostics.Debug.Assert(opCode == currentInstruction.OpCode);                
+                //System.Diagnostics.Debug.Assert(opCode == currentInstruction.OpCode);                
             }
 
             if (currentInstruction.Type == InstructionType.Invalid)
-                throw new Exception("Invalid operation");
+            {
+                UnityEngine.Debug.Log("currentInstruction.Type == InstructionType.Invalid");
+            }
 
             if(buildString)
                 InstructionText += currentInstruction.Nmumonic + " ";
@@ -533,10 +535,14 @@ namespace x86Disasm
             Operation operation;
 
             if(!operations.TryGetValue(currentInstruction.OpCode, out operation))
-                throw new Exception("Instruction not implemented");
+            {
+                return;
+            }
 
             if (operands.Length != operation.NumberOfArgs)
-                throw new Exception("wrong number of arguments");
+            {
+                return;
+            }
 
             switch (operation.NumberOfArgs)
             {

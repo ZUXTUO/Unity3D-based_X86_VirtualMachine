@@ -7,7 +7,6 @@ namespace x86CS.ATADevice
 {
     public class HardDisk : ATADrive
     {
-        //private FileStream stream;
         private BinaryReader reader;
         private Footer footer;
         private DiskHeader header;
@@ -66,7 +65,7 @@ namespace x86CS.ATADevice
         public override void LoadImage(string filename)
         {
             byte[] buffer;
-            //try { stream = File.Open(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.Read); } catch { stream = UnityManager.ins.Img_stream; }
+
             reader = new BinaryReader(UnityManager.ins.Img_stream);
             UnityManager.ins.Img_stream.Seek(-512, SeekOrigin.End);
             buffer = reader.ReadBytes(512);
@@ -204,7 +203,7 @@ namespace x86CS.ATADevice
                     Write();
                     break;
                 default:
-                    System.Diagnostics.Debugger.Break();
+                    //System.Diagnostics.Debugger.Break();
                     break;
             }
            
@@ -225,7 +224,7 @@ namespace x86CS.ATADevice
                     sectorBuffer = identifyBuffer;
                     break;
                 default:
-                    System.Diagnostics.Debugger.Break();
+                    //System.Diagnostics.Debugger.Break();
                     break;
             }
             Status |= DeviceStatus.DataRequest;

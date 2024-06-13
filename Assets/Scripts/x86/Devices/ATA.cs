@@ -36,33 +36,8 @@ namespace x86CS.Devices
 
         public ATA()
         {
-            if (UnityManager.ins.Disks.Length == 0)
-            {
-                UnityEngine.Debug.Log("硬盘不存在");
-                return;
-            }
-            else
-            {
-                for (int disk = 0; disk < UnityManager.ins.Disks.Length; disk++)
-                {
-                    ATADrive newDrive;
-                    DiskElement drive = UnityManager.ins.Disks[disk];
-
-                    if (drive.Type == DriveType.HardDisk)
-                        newDrive = new HardDisk();
-                    else if (drive.Type == DriveType.CDROM)
-                        newDrive = new CDROM();
-                    else
-                        break;
-
-                    newDrive.LoadImage(drive.Image);
-
-                    diskDrives.Add(newDrive);
-                }
-            }
-
             /*
-            foreach (DiskElement drive in UnityManager.ins.Disks)
+            foreach (DiskElement drive in SystemConfig.Machine.Disks)
             {
                 ATADrive newDrive;
 
@@ -78,7 +53,6 @@ namespace x86CS.Devices
                 diskDrives.Add(newDrive);
             }
             */
-
             primarySelected = true;
         }
 
@@ -183,7 +157,7 @@ namespace x86CS.Devices
                 case 0x3f6:
                     return deviceControl[0];
                 default:
-                    System.Diagnostics.Debugger.Break();
+                    //System.Diagnostics.Debugger.Break();
                     break;
             }
             return 0;
@@ -307,17 +281,11 @@ namespace x86CS.Devices
                     deviceControl[0] = (byte)value;
                     break;
                 default:
-                    System.Diagnostics.Debugger.Break();
+                    //System.Diagnostics.Debugger.Break();
                     break;
             }
         }
 
         #endregion
-    }
-
-    public class DiskElement
-    {
-        public DriveType Type;
-        public string Image;
     }
 }

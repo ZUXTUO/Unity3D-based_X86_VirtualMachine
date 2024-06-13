@@ -321,8 +321,6 @@ namespace x86CS.CPU
                 CS = Memory.Read((uint)(dest.Value * 4) + 2, 16);
                 EIP = Memory.Read((uint)(dest.Value * 4), 16);
             }
-
-            UnityEngine.Debug.Log(String.Format("Interrupt {0:X}, Calling hander {1:X}:{2:X}", dest.Value, CS, EIP));
         }
 
         [CPUFunction(OpCode = 0xcf)]
@@ -335,7 +333,7 @@ namespace x86CS.CPU
 
             CS = StackPop();
             eFlags = (CPUFlags)StackPop();
-            DumpRegisters();
+            //DumpRegisters();
         }
 
         [CPUFunction(OpCode = 0xe0)]

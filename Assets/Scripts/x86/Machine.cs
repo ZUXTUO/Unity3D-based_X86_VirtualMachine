@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
 using x86CS.Devices;
 using x86CS.Configuration;
+using x86CS.ATADevice;
 
 namespace x86CS
 {
@@ -15,15 +15,16 @@ namespace x86CS
         private readonly Dictionary<uint, uint> tempBreakpoints = new Dictionary<uint, uint>();
         private readonly IDevice[] devices;
         private readonly PIC8259 picDevice;
-        private readonly VGA vgaDevice;
+        public readonly VGA vgaDevice;
         private readonly DMAController dmaController;
         private readonly ATA ataDevice;
 
         private Dictionary<ushort, IOEntry> ioPorts;
-        private KeyboardDevice keyboard;
+        public KeyboardDevice keyboard;
         private bool isStepping;
 
         public Floppy FloppyDrive { get; private set; }
+        public HardDisk HardDiskDrive { get; private set; }
         public CPU.CPU CPU { get; private set; }
 
         public bool Running;
@@ -39,8 +40,6 @@ namespace x86CS
 
         public Machine()
         {
-            UnityEngine.Debug.Log("初始化");
-
             picDevice = new PIC8259();
             vgaDevice = new VGA();
             FloppyDrive = new Floppy();
@@ -61,26 +60,18 @@ namespace x86CS
 
             CPU.IORead += CPUIORead;
             CPU.IOWrite += CPUIOWrite;
-
-            //picDevice.OnInterrupt();
         }
 
-        /*
-        void GUIKeyUp(object sender, UIntEventArgs e)
+        void ApplicationIdle(object sender, System.EventArgs e)
         {
-            keyboard.KeyUp(e.Number);
+            while (AppStillIdle)
+            {
+                RunCycle();
+            }
         }
-
-        void GUIKeyDown(object sender, UIntEventArgs e)
-        {
-            keyboard.KeyPress(e.Number);
-        }
-        */
 
         void PicDeviceInterrupt(object sender, InterruptEventArgs e)
         {
-            UnityEngine.Debug.Log("PicDeviceInterrupt");
-
             if (CPU.IF)
             {
                 uint currentAddr = (uint)(CPU.GetSelectorBase(x86Disasm.SegmentRegister.CS) + CPU.EIP);
@@ -116,7 +107,7 @@ namespace x86CS
 
         private void SetupIOEntry(ushort port, ReadCallback read, WriteCallback write)
         {
-            var entry = new IOEntry { Read = read, Write = write };
+            var entry = new IOEntry {Read = read, Write = write};
 
             ioPorts.Add(port, entry);
         }
@@ -125,12 +116,7 @@ namespace x86CS
         {
             IOEntry entry;
 
-            var ret = (ushort)(!ioPorts.TryGetValue(addr, out entry) ? 0xffff : entry.Read(addr, size));
-
-            if (UnityManager.ins.LogOutput)
-            {
-                UnityEngine.Debug.Log(String.Format("IO Read Port {0:X}, Value {1:X}", addr, ret));
-            }
+            var ret = (ushort) (!ioPorts.TryGetValue(addr, out entry) ? 0xffff : entry.Read(addr, size));
 
             return ret;
         }
@@ -141,18 +127,10 @@ namespace x86CS
 
             if (ioPorts.TryGetValue(addr, out entry))
                 entry.Write(addr, value, size);
-
-            if (UnityManager.ins.LogOutput)
-            {
-                UnityEngine.Debug.Log(String.Format("IO Write Port {0:X}, Value {1:X}", addr, value));
-            }
         }
 
         private void LoadBIOS()
         {
-            UnityEngine.Debug.Log("载入BIOS");
-
-            //FileStream biosStream = File.OpenRead("BIOS-bochs-latest");
             var buffer = new byte[UnityManager.ins.Bios_stream.Length];
 
             uint startAddr = (uint)(0xfffff - buffer.Length) + 1;
@@ -166,9 +144,6 @@ namespace x86CS
 
         private void LoadVGABios()
         {
-            UnityEngine.Debug.Log("载入VGABios");
-
-            //FileStream biosStream = File.OpenRead("VGABIOS-lgpl-latest");
             var buffer = new byte[UnityManager.ins.VgaBios_stream.Length];
 
             UnityManager.ins.VgaBios_stream.Read(buffer, 0, buffer.Length);
@@ -181,27 +156,23 @@ namespace x86CS
         private void SetupSystem()
         {
             ioPorts = new Dictionary<ushort, IOEntry>();
-            //            keyboard = new KeyboardDevice();
+            keyboard = new KeyboardDevice();
 
             LoadBIOS();
             LoadVGABios();
 
-            foreach (IDevice device in devices)
+            foreach(IDevice device in devices)
             {
                 INeedsIRQ irqDevice = device as INeedsIRQ;
                 INeedsDMA dmaDevice = device as INeedsDMA;
 
-                if (irqDevice != null)
-                {
+                if(irqDevice != null)
                     irqDevice.IRQ += IRQRaised;
-                }
 
-                if (dmaDevice != null)
-                {
+                if(dmaDevice != null)
                     dmaDevice.DMA += DMARaised;
-                }
 
-                foreach (int port in device.PortsUsed)
+                foreach(int port in device.PortsUsed)
                     SetupIOEntry((ushort)port, device.Read, device.Write);
             }
 
@@ -235,13 +206,13 @@ namespace x86CS
         public bool CheckBreakpoint()
         {
             uint cpuAddr = CPU.CurrentAddr;
-
+            
             return breakpoints.ContainsKey(cpuAddr) || tempBreakpoints.ContainsKey(cpuAddr);
         }
 
         public void Start()
         {
-            //int addr = (int)((CPU.CS << 4) + CPU.IP);
+            int addr = (int)((CPU.CS << 4) + CPU.IP);
 
             CPU.Fetch(true);
         }
@@ -278,10 +249,10 @@ namespace x86CS
         public void RunCycle(bool logging, bool stepping)
         {
             isStepping = stepping;
-            CPU.Cycle();
+            CPU.Cycle(logging);
             CPU.Fetch(logging);
             picDevice.RunController();
-            keyboard.Cycle();
+            //keyboard.Cycle();
         }
     }
 

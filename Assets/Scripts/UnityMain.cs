@@ -6,9 +6,16 @@ using System.Threading;
 
 public class UnityMain : MonoBehaviour
 {
+    public static UnityMain ins;
+
     public Machine machine;
     public Thread thread;
-    public bool CPU_Run = true;
+    public bool CPU_Run = false;
+
+    public void Awake()
+    {
+        ins = this;
+    }
 
     /// <summary>
     /// ¿ª»ú
@@ -19,6 +26,7 @@ public class UnityMain : MonoBehaviour
         UnityManager.ins.MemorySize = 256;
         machine.Running = true;
         machine.Start();
+        CPU_Run = true;
         thread = new Thread(() =>
         {
             while (CPU_Run)

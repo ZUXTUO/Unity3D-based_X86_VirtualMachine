@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace x86CS.Devices
 {
     public class DMAController : IDevice
@@ -35,8 +36,6 @@ namespace x86CS.Devices
             ushort address = memAddress[channel];
             ushort length = counts[channel+1];  
             uint fullAddr = (uint)((pages[channel] << 16) + address);
-
-            UnityEngine.Debug.Log(String.Format("Transferring {0} bytes from {1:X}", length + 1, fullAddr));
 
             Memory.BlockWrite(fullAddr, data, length + 1);
         }
@@ -87,7 +86,7 @@ namespace x86CS.Devices
                 case 0xa:
                     return mask;
                 default:
-                    System.Diagnostics.Debugger.Break();
+                    //System.Diagnostics.Debugger.Break();
                     break;
             }
 
@@ -138,7 +137,7 @@ namespace x86CS.Devices
                     pages[1] = (byte)value;
                     break;
                 default:
-                    System.Diagnostics.Debugger.Break();
+                    //System.Diagnostics.Debugger.Break();
                     break;
             }
         }

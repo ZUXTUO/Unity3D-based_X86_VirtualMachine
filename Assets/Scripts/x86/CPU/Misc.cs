@@ -26,7 +26,7 @@ namespace x86CS.CPU
                     EDX = 0x3ce4787; /* support some stuff, other stuff not so much (i will comment or move this to enums at some point)*/
                     break;
                 default:
-                    System.Diagnostics.Debugger.Break();
+                    //System.Diagnostics.Debugger.Break();
                     break;
             }
         }
