@@ -28,7 +28,7 @@ namespace x86CS
         public CPU.CPU CPU { get; private set; }
 
         public bool Running;
-
+        /*
         private bool AppStillIdle
         {
             get
@@ -37,7 +37,7 @@ namespace x86CS
                 return !NativeMethods.PeekMessage(out msg, IntPtr.Zero, 0, 0, 0);
             }
         }
-
+        */
         public Machine()
         {
             picDevice = new PIC8259();
@@ -61,7 +61,7 @@ namespace x86CS
             CPU.IORead += CPUIORead;
             CPU.IOWrite += CPUIOWrite;
         }
-
+        /*
         void ApplicationIdle(object sender, System.EventArgs e)
         {
             while (AppStillIdle)
@@ -69,7 +69,7 @@ namespace x86CS
                 RunCycle();
             }
         }
-
+        */
         void PicDeviceInterrupt(object sender, InterruptEventArgs e)
         {
             if (CPU.IF)

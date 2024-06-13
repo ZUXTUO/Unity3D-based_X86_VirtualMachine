@@ -41,12 +41,12 @@ public class UnityManager : MonoBehaviour
     /// </summary>
     public void DiskLoad()
     {
+#if UNITY_EDITOR
         ImagePath = Directory.GetCurrentDirectory() + "/IMG/" + ImageName;
         Img_stream = new FileStream(Directory.GetCurrentDirectory() + "/IMG/" + ImageName, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
         Bios_stream = new FileStream(Directory.GetCurrentDirectory() + "/IMG/" + BiosName, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
         VgaBios_stream = new FileStream(Directory.GetCurrentDirectory() + "/IMG/" + VgaBiosName, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
 
-        //if (Type == x86CS.Configuration.DriveType.HardDisk || Type == x86CS.Configuration.DriveType.ALL)
         if (Type == x86CS.Configuration.DriveType.HardDisk)
         {
             if (VHD_Name != null)
@@ -55,13 +55,33 @@ public class UnityManager : MonoBehaviour
             }
         }
         else if (Type == x86CS.Configuration.DriveType.CDROM)
-        //if (Type == x86CS.Configuration.DriveType.CDROM || Type == x86CS.Configuration.DriveType.ALL)
         {
             if (ISO_Name != null)
             {
                 ISO_Path = Directory.GetCurrentDirectory() + "/IMG/" + ISO_Name;
             }
         }
+#elif UNITY_PSP2
+        ImagePath = "/ux0:/IMG/" + ImageName;
+        Img_stream = new FileStream("/ux0:/IMG/" + ImageName, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+        Bios_stream = new FileStream("/ux0:/IMG/" + BiosName, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+        VgaBios_stream = new FileStream("/ux0:/IMG/" + VgaBiosName, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+
+        if (Type == x86CS.Configuration.DriveType.HardDisk)
+        {
+            if (VHD_Name != null)
+            {
+                VHD_Path = "/ux0:/IMG/" + VHD_Name;
+            }
+        }
+        else if (Type == x86CS.Configuration.DriveType.CDROM)
+        {
+            if (ISO_Name != null)
+            {
+                ISO_Path = "/ux0:/IMG/" + ISO_Name;
+            }
+        }
+#endif
     }
 
     public FileStream Img_stream;//¾µÏñÎÄ¼þ-Á÷

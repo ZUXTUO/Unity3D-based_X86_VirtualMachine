@@ -3,14 +3,17 @@ using x86CS.Devices;
 using x86CS.Configuration;
 using UnityEngine;
 using System.Threading;
+using System.Collections;
 
 public class UnityMain : MonoBehaviour
 {
     public static UnityMain ins;
 
     public Machine machine;
-    public Thread thread;
+    [Header("检测CPU是否在运行")]
     public bool CPU_Run = false;
+    [Header("模拟的CPU频率")]
+    public int HZ = 500;
 
     public void Awake()
     {
@@ -27,14 +30,19 @@ public class UnityMain : MonoBehaviour
         machine.Running = true;
         machine.Start();
         CPU_Run = true;
-        thread = new Thread(() =>
+        StartCoroutine(RunCpuCycle());
+    }
+
+    private IEnumerator RunCpuCycle()
+    {
+        while (CPU_Run)
         {
-            while (CPU_Run)
+            for(int a = 0; a < HZ; a++)
             {
                 machine.RunCycle();
             }
-        });
-        thread.Start();
+            yield return null;
+        }
     }
 
     /// <summary>
@@ -43,7 +51,7 @@ public class UnityMain : MonoBehaviour
     public void OnApplicationQuit()
     {
         CPU_Run = false;
-        thread.Join();
+        StopCoroutine(RunCpuCycle());
     }
 
     /// <summary>

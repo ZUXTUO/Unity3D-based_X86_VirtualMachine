@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿//using System.Drawing;
+
+using UnityEngine;
 
 namespace x86CS.Devices
 {
@@ -143,7 +145,8 @@ namespace x86CS.Devices
                     if (++currColor == 3)
                     {
                         currColor = 0;
-                        dacPalette[dacAddress] = Color.FromArgb(dacColour[0], dacColour[1], dacColour[2]);
+                        //dacPalette[dacAddress] = Color.FromArgb(dacColour[0], dacColour[1], dacColour[2]);
+                        dacPalette[dacAddress] = new Color(dacColour[0] / 255f, dacColour[1] / 255f, dacColour[2] / 255f);
                         dacAddress++;
                     }
                     break;

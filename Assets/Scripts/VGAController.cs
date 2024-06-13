@@ -16,7 +16,7 @@ public class VGAController : MonoBehaviour
         vgaTexture_1 = new Texture2D(960, 544);
         vgaTexture_2 = new Texture2D(960, 544);
     }
-
+    /*
     public static Color Convert(System.Drawing.Color drawingColor)
     {
         return new Color(
@@ -26,8 +26,9 @@ public class VGAController : MonoBehaviour
             drawingColor.A / 255f
         );
     }
-
-    public void Update()
+    */
+    //public void Update()
+    public void Test()
     {
         if (UnityMain.ins.CPU_Run)
         {
@@ -41,7 +42,7 @@ public class VGAController : MonoBehaviour
             Color[] pixelColors_1 = new Color[960 * 544];
             Color[] pixelColors_2 = new Color[960 * 544];
 
-            int pixelIndex = 0;
+            //int pixelIndex = 0;
 
             for (var i = 0; i < displayBuffer.Length; i += 2)
             {
@@ -50,8 +51,10 @@ public class VGAController : MonoBehaviour
                 byte attribute = displayBuffer[i + 1];
                 int y = i / 160 * 16;
 
-                System.Drawing.Color foreColour = UnityMain.ins.machine.vgaDevice.GetColour(attribute & 0xf);
-                System.Drawing.Color backColour = UnityMain.ins.machine.vgaDevice.GetColour((attribute >> 4) & 0xf);
+                //System.Drawing.Color foreColour = UnityMain.ins.machine.vgaDevice.GetColour(attribute & 0xf);
+                //System.Drawing.Color backColour = UnityMain.ins.machine.vgaDevice.GetColour((attribute >> 4) & 0xf);
+                Color foreColour = UnityMain.ins.machine.vgaDevice.GetColour(attribute & 0xf);
+                Color backColour = UnityMain.ins.machine.vgaDevice.GetColour((attribute >> 4) & 0xf);
 
                 for (var f = fontOffset; f < fontOffset + 16; f++)
                 {
@@ -60,9 +63,11 @@ public class VGAController : MonoBehaviour
                     for (var j = 7; j >= 0; j--)
                     {
                         if (((fontBuffer[f] >> j) & 0x1) != 0)
-                            vgaTexture_1.SetPixel(x, y, Convert(foreColour));
+                            //vgaTexture_1.SetPixel(x, y, Convert(foreColour));
+                            vgaTexture_1.SetPixel(x, y, foreColour);
                         else
-                            vgaTexture_2.SetPixel(x, y, Convert(backColour));
+                            //vgaTexture_2.SetPixel(x, y, Convert(backColour));
+                            vgaTexture_2.SetPixel(x, y, backColour);
                         x++;
                     }
                     y++;
@@ -73,7 +78,7 @@ public class VGAController : MonoBehaviour
             vgaTexture_2.Apply();
             image_1.texture = vgaTexture_1;
             image_2.texture = vgaTexture_2;
-
+            /*
             if (Input.GetKeyDown(KeyCode.Keypad0))
             {
                 UnityMain.ins.machine.keyboard.KeyPress((uint)'0');
@@ -144,6 +149,7 @@ public class VGAController : MonoBehaviour
                 UnityMain.ins.machine.keyboard.KeyUp((uint)'\r');
                 Debug.Log("up enter");
             }
+            */
         }
     }
 }
