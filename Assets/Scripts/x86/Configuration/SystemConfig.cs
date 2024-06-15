@@ -1,4 +1,4 @@
-﻿using System.Configuration;
+using System.Configuration;
 
 namespace x86CS.Configuration
 {
@@ -12,6 +12,6 @@ namespace x86CS.Configuration
         None,
         HardDisk,
         CDROM,
-        //ALL
+        Floppy
     }
 }

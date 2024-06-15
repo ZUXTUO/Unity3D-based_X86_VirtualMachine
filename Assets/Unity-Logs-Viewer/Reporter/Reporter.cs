@@ -210,6 +210,8 @@ public class Reporter : MonoBehaviour
 	public float fps;
 	public string fpsText;
 
+	public Font font;
+
 	//List<Texture2D> snapshots = new List<Texture2D>() ;
 
 	enum ReportView
@@ -462,6 +464,7 @@ public class Reporter : MonoBehaviour
 		nonStyle.clipping = TextClipping.Clip;
 		nonStyle.border = new RectOffset(0, 0, 0, 0);
 		nonStyle.normal.background = null;
+		nonStyle.font = font;
 		nonStyle.fontSize = (int)(size.y / 2);
 		nonStyle.alignment = TextAnchor.MiddleCenter;
 
@@ -469,6 +472,7 @@ public class Reporter : MonoBehaviour
 		lowerLeftFontStyle.clipping = TextClipping.Clip;
 		lowerLeftFontStyle.border = new RectOffset(0, 0, 0, 0);
 		lowerLeftFontStyle.normal.background = null;
+		lowerLeftFontStyle.font = font;
 		lowerLeftFontStyle.fontSize = (int)(size.y / 2);
 		lowerLeftFontStyle.fontStyle = FontStyle.Bold;
 		lowerLeftFontStyle.alignment = TextAnchor.LowerLeft;
@@ -484,6 +488,7 @@ public class Reporter : MonoBehaviour
 		//barStyle.padding = new RectOffset(paddingX,paddingX,paddingY,paddingY); 
 		//barStyle.wordWrap = true ;
 		barStyle.clipping = TextClipping.Clip;
+		barStyle.font = font;
 		barStyle.fontSize = (int)(size.y / 2);
 
 
@@ -493,11 +498,13 @@ public class Reporter : MonoBehaviour
 		buttonActiveStyle.alignment = TextAnchor.MiddleCenter;
 		buttonActiveStyle.margin = new RectOffset(1, 1, 1, 1);
 		//buttonActiveStyle.padding = new RectOffset(4,4,4,4);
+		buttonActiveStyle.font = font;
 		buttonActiveStyle.fontSize = (int)(size.y / 2);
 
 		backStyle = new GUIStyle();
 		backStyle.normal.background = images.even_logImage;
 		backStyle.clipping = TextClipping.Clip;
+		backStyle.font = font;
 		backStyle.fontSize = (int)(size.y / 2);
 
 		evenLogStyle = new GUIStyle();
@@ -506,6 +513,7 @@ public class Reporter : MonoBehaviour
 		evenLogStyle.clipping = TextClipping.Clip;
 		evenLogStyle.alignment = TextAnchor.UpperLeft;
 		evenLogStyle.imagePosition = ImagePosition.ImageLeft;
+		evenLogStyle.font = font;
 		evenLogStyle.fontSize = (int)(size.y / 2);
 		//evenLogStyle.wordWrap = true;
 
@@ -515,6 +523,7 @@ public class Reporter : MonoBehaviour
 		oddLogStyle.clipping = TextClipping.Clip;
 		oddLogStyle.alignment = TextAnchor.UpperLeft;
 		oddLogStyle.imagePosition = ImagePosition.ImageLeft;
+		oddLogStyle.font = font;
 		oddLogStyle.fontSize = (int)(size.y / 2);
 		//oddLogStyle.wordWrap = true ;
 
@@ -525,6 +534,7 @@ public class Reporter : MonoBehaviour
 		logButtonStyle.alignment = TextAnchor.UpperLeft;
 		//logButtonStyle.imagePosition = ImagePosition.ImageLeft ;
 		//logButtonStyle.wordWrap = true;
+		logButtonStyle.font = font;
 		logButtonStyle.fontSize = (int)(size.y / 2);
 		logButtonStyle.padding = new RectOffset(paddingX, paddingX, paddingY, paddingY);
 
@@ -535,6 +545,7 @@ public class Reporter : MonoBehaviour
 		selectedLogStyle.alignment = TextAnchor.UpperLeft;
 		selectedLogStyle.normal.textColor = Color.white;
 		//selectedLogStyle.wordWrap = true;
+		selectedLogStyle.font = font;
 		selectedLogStyle.fontSize = (int)(size.y / 2);
 
 		selectedLogFontStyle = new GUIStyle();
@@ -544,11 +555,13 @@ public class Reporter : MonoBehaviour
 		selectedLogFontStyle.alignment = TextAnchor.UpperLeft;
 		selectedLogFontStyle.normal.textColor = Color.white;
 		//selectedLogStyle.wordWrap = true;
+		selectedLogFontStyle.font = font;
 		selectedLogFontStyle.fontSize = (int)(size.y / 2);
 		selectedLogFontStyle.padding = new RectOffset(paddingX, paddingX, paddingY, paddingY);
 
 		stackLabelStyle = new GUIStyle();
 		stackLabelStyle.wordWrap = true;
+		stackLabelStyle.font = font;
 		stackLabelStyle.fontSize = (int)(size.y / 2);
 		stackLabelStyle.padding = new RectOffset(paddingX, paddingX, paddingY, paddingY);
 
@@ -558,6 +571,7 @@ public class Reporter : MonoBehaviour
 		searchStyle = new GUIStyle();
 		searchStyle.clipping = TextClipping.Clip;
 		searchStyle.alignment = TextAnchor.LowerCenter;
+		searchStyle.font = font;
 		searchStyle.fontSize = (int)(size.y / 2);
 		searchStyle.wordWrap = true;
 

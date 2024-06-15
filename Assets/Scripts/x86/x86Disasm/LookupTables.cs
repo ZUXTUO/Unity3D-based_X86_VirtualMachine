@@ -1,4 +1,4 @@
-﻿namespace x86Disasm
+namespace x86Disasm
 {
     public partial class Disassembler
     {

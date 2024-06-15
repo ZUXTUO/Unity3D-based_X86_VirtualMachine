@@ -1,4 +1,4 @@
-﻿using x86Disasm;
+using x86Disasm;
 namespace x86CS.CPU
 {
     public partial class CPU

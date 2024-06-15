@@ -4,18 +4,18 @@ using x86CS;
 using x86CS.Devices;
 public class VGAController : MonoBehaviour
 {
-    private Texture2D vgaTexture_1, vgaTexture_2;
+    public Texture2D vgaTexture_1, vgaTexture_2;
     public RawImage image_1, image_2;
 
-    public int memory_1, memory_2;
+    //public int memory_1, memory_2;
 
-    public Event e;
+    //public Event e;
 
-    private void Start()
-    {
-        vgaTexture_1 = new Texture2D(960, 544);
-        vgaTexture_2 = new Texture2D(960, 544);
-    }
+    //private void Start()
+    //{
+        //vgaTexture_1 = new Texture2D(960, 544);
+        //vgaTexture_2 = new Texture2D(960, 544);
+    //}
     /*
     public static Color Convert(System.Drawing.Color drawingColor)
     {
@@ -32,10 +32,13 @@ public class VGAController : MonoBehaviour
     {
         if (UnityMain.ins.CPU_Run)
         {
+            vgaTexture_1 = new Texture2D(960, 544);
+            vgaTexture_2 = new Texture2D(960, 544);
+
             byte[] fontBuffer = new byte[0x2000];
             byte[] displayBuffer = new byte[0xfa0];
 
-            // 从内存中读取数据
+            // 浠庡唴瀛樹腑璇诲彇鏁版嵁
             Memory.BlockRead(0xa0000, fontBuffer, fontBuffer.Length);
             Memory.BlockRead(0xb8000, displayBuffer, displayBuffer.Length);
 

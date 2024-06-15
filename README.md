@@ -25,4 +25,4 @@ Unity 2018.3.0a2をベースにしています。<br>
 
 シミュレートされているCPUは非常に古いため、最大でもDOSやWindows 95を実行する程度と推測されます。<br><br><br>
 
-![image](IMG/sc.jpg)
+![image](IMG/image.gif)

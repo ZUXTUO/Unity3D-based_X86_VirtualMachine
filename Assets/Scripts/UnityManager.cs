@@ -12,46 +12,57 @@ public class UnityManager : MonoBehaviour
         ins = this;
         DontDestroyOnLoad(gameObject);
 
-        DiskLoad();//ÔØÈëĞéÄâÓ²ÅÌĞÅÏ¢
+        DiskLoad();//è½½å…¥è™šæ‹Ÿç¡¬ç›˜ä¿¡æ¯
     }
 
-    [Header("¾µÏñÃû")]
-    public string ImageName;
-    [Header("¾µÏñÎ»ÖÃ(²»ÓÃÌî)")]
-    public string ImagePath;
-    [Header("BIOSÃû")]
-    public string BiosName;
-    [Header("VGABIOSÃû")]
-    public string VgaBiosName;
-    [Header("ÔË´æ´óĞ¡")]
-    public int MemorySize = 256;
-    [Header("¾µÏñÃû")]
-    public x86CS.Configuration.DriveType Type;
-    [Header("ĞéÄâÓ²ÅÌÃû³Æ£¨Ñ¡Ìî£©")]
+    [Header("è™šæ‹Ÿè½¯ç›˜å")]
+    public string FloppyName;
+    [Header("è™šæ‹Ÿç¡¬ç›˜åç§°")]
     public string VHD_Name;
-    [Header("ĞéÄâÓ²ÅÌµØÖ·(²»ÓÃÌî)")]
-    public string VHD_Path;
-    [Header("ĞéÄâ¹âÅÌÃû³Æ£¨Ñ¡Ìî£©")]
+    [Header("è™šæ‹Ÿå…‰ç›˜åç§°")]
     public string ISO_Name;
-    [Header("ĞéÄâ¹âÅÌµØÖ·(²»ÓÃÌî)")]
+    [Header("BIOSå")]
+    public string BiosName;
+    [Header("VGABIOSå")]
+    public string VgaBiosName;
+    [Header("è¿å­˜å¤§å°")]
+    public int MemorySize = 256;
+    [Header("é•œåƒå")]
+    public x86CS.Configuration.DriveType Type;
+
+    [HideInInspector]
+    public string FloppyPath;
+    [HideInInspector]
+    public string VHD_Path;
+    [HideInInspector]
     public string ISO_Path;
 
     /// <summary>
-    /// ÔØÈëĞéÄâÓ²ÅÌĞÅÏ¢
+    /// è½½å…¥è™šæ‹Ÿç¡¬ç›˜ä¿¡æ¯
     /// </summary>
     public void DiskLoad()
     {
 #if UNITY_EDITOR
-        ImagePath = Directory.GetCurrentDirectory() + "/IMG/" + ImageName;
-        Img_stream = new FileStream(Directory.GetCurrentDirectory() + "/IMG/" + ImageName, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
         Bios_stream = new FileStream(Directory.GetCurrentDirectory() + "/IMG/" + BiosName, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
         VgaBios_stream = new FileStream(Directory.GetCurrentDirectory() + "/IMG/" + VgaBiosName, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
 
-        if (Type == x86CS.Configuration.DriveType.HardDisk)
+        if (Type == x86CS.Configuration.DriveType.Floppy)
+        {
+            if (FloppyName != null)
+            {
+                FloppyPath = Directory.GetCurrentDirectory() + "/IMG/" + FloppyName;
+                Img_stream = new FileStream(FloppyPath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                UnityEngine.Debug.Log("Floppy: "+ FloppyPath);
+            }
+        }
+        else if (Type == x86CS.Configuration.DriveType.HardDisk)
         {
             if (VHD_Name != null)
             {
+                UnityEngine.Debug.Log("è™šæ‹Ÿç¡¬ç›˜åˆæ­¥è½½å…¥å®Œæˆ");
                 VHD_Path = Directory.GetCurrentDirectory() + "/IMG/" + VHD_Name;
+                Img_stream = new FileStream(VHD_Path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                UnityEngine.Debug.Log("HardDisk: " + VHD_Path);
             }
         }
         else if (Type == x86CS.Configuration.DriveType.CDROM)
@@ -59,10 +70,12 @@ public class UnityManager : MonoBehaviour
             if (ISO_Name != null)
             {
                 ISO_Path = Directory.GetCurrentDirectory() + "/IMG/" + ISO_Name;
+                Img_stream = new FileStream(ISO_Path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                UnityEngine.Debug.Log("ISO: " + ISO_Path);
             }
         }
 #elif UNITY_PSP2
-        ImagePath = "/ux0:/IMG/" + ImageName;
+        FloppyPath = "/ux0:/IMG/" + FloppyName;
         Img_stream = new FileStream("/ux0:/IMG/" + ImageName, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
         Bios_stream = new FileStream("/ux0:/IMG/" + BiosName, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
         VgaBios_stream = new FileStream("/ux0:/IMG/" + VgaBiosName, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
@@ -84,7 +97,7 @@ public class UnityManager : MonoBehaviour
 #endif
     }
 
-    public FileStream Img_stream;//¾µÏñÎÄ¼ş-Á÷
-    public FileStream Bios_stream;//BIOSÎÄ¼ş-Á÷
-    public FileStream VgaBios_stream;//VGABIOSÎÄ¼ş-Á÷
+    public FileStream Img_stream;//é•œåƒæ–‡ä»¶-æµ
+    public FileStream Bios_stream;//BIOSæ–‡ä»¶-æµ
+    public FileStream VgaBios_stream;//VGABIOSæ–‡ä»¶-æµ
 }

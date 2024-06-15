@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 namespace x86Disasm
 {
     [System.AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]

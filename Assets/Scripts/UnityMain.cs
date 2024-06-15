@@ -10,10 +10,14 @@ public class UnityMain : MonoBehaviour
     public static UnityMain ins;
 
     public Machine machine;
-    [Header("¼ì²âCPUÊÇ·ñÔÚÔËĞĞ")]
+    [Header("æ£€æµ‹CPUæ˜¯å¦åœ¨è¿è¡Œ")]
     public bool CPU_Run = false;
-    [Header("Ä£ÄâµÄCPUÆµÂÊ")]
+    [Header("æ¨¡æ‹Ÿçš„CPUé¢‘ç‡")]
     public int HZ = 500;
+    [Header("VGAæ˜¾ç¤ºå™¨")]
+    public VGAController VGA;
+    [Header("æ˜¯å¦éœ€è¦å®æ—¶æ˜¾ç¤ºå±å¹•ä¿¡æ¯")]
+    public bool NeedLoadVGA = true;
 
     public void Awake()
     {
@@ -21,7 +25,7 @@ public class UnityMain : MonoBehaviour
     }
 
     /// <summary>
-    /// ¿ª»ú
+    /// å¼€æœº
     /// </summary>
     public void Load()
     {
@@ -41,12 +45,16 @@ public class UnityMain : MonoBehaviour
             {
                 machine.RunCycle();
             }
+            if (NeedLoadVGA)
+            {
+                VGA.Test();
+            }
             yield return null;
         }
     }
 
     /// <summary>
-    /// ¹Ø±Õ
+    /// å…³é—­
     /// </summary>
     public void OnApplicationQuit()
     {
@@ -55,7 +63,7 @@ public class UnityMain : MonoBehaviour
     }
 
     /// <summary>
-    /// ÄÚ´æÊä³ö
+    /// å†…å­˜è¾“å‡º
     /// </summary>
     public void Out()
     {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using x86CS.Devices;
@@ -17,14 +17,14 @@ namespace x86CS
         private readonly PIC8259 picDevice;
         public readonly VGA vgaDevice;
         private readonly DMAController dmaController;
-        private readonly ATA ataDevice;
+        public ATA ataDevice;
 
         private Dictionary<ushort, IOEntry> ioPorts;
         public KeyboardDevice keyboard;
         private bool isStepping;
 
         public Floppy FloppyDrive { get; private set; }
-        public HardDisk HardDiskDrive { get; private set; }
+        //public HardDisk HardDiskDrive { get; private set; }
         public CPU.CPU CPU { get; private set; }
 
         public bool Running;
@@ -43,14 +43,27 @@ namespace x86CS
             picDevice = new PIC8259();
             vgaDevice = new VGA();
             FloppyDrive = new Floppy();
+            //HardDiskDrive = new HardDisk();
             dmaController = new DMAController();
             keyboard = new KeyboardDevice();
             ataDevice = new ATA();
 
-            devices = new IDevice[]
+            if (UnityManager.ins.Type == Configuration.DriveType.Floppy)
+            {
+                devices = new IDevice[]
                           {
-                              FloppyDrive, new CMOS(ataDevice), new Misc(), new PIT8253(), picDevice, keyboard, dmaController, vgaDevice, ataDevice
+                              FloppyDrive, new CMOS(ataDevice), new Misc(), new PIT8253(), picDevice, keyboard, dmaController, vgaDevice
                           };
+            }
+            else if (UnityManager.ins.Type == Configuration.DriveType.HardDisk || UnityManager.ins.Type == Configuration.DriveType.CDROM)
+            {
+                devices = new IDevice[]
+                          {
+                              ataDevice, new CMOS(ataDevice), new Misc(), new PIT8253(), picDevice, keyboard, dmaController, vgaDevice
+                          };
+
+                UnityEngine.Debug.Log("虚拟硬盘/光驱数量：" + ataDevice.diskDrives.Count);
+            }
 
             CPU = new CPU.CPU();
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using x86CS.Configuration;
 
@@ -66,26 +66,10 @@ namespace x86CS.Devices
                 handler(this, e);
         }
 
-        public bool MountImage(string imagePath)
+        public bool MountImage()
         {
-            try
-            {
-                if (UnityManager.ins.Img_stream == null)
-                {
-                    UnityManager.ins.Img_stream = File.OpenRead(imagePath);
-                    UnityEngine.Debug.Log("导入软盘信息：" + imagePath);
-                }
-                else
-                {
-                    UnityEngine.Debug.Log("内存中已有数据");
-                }
-                floppyReader = new BinaryReader(UnityManager.ins.Img_stream);
-            }
-            catch (Exception)
-            {
-                UnityEngine.Debug.Log("导入软盘有问题：" + imagePath);
-                return false;
-            }
+            floppyReader = new BinaryReader(UnityManager.ins.Img_stream);
+            UnityEngine.Debug.Log("导入内存中的软盘内容");
 
             return true;
         }
@@ -130,7 +114,7 @@ namespace x86CS.Devices
             switch (command)
             {
                 case FloppyCommand.Recalibrate:
-                    MountImage(UnityManager.ins.ImagePath);
+                    MountImage();
                     if (UnityManager.ins.Img_stream.Length != 0)
                     {
                         UnityManager.ins.Img_stream.Seek(0, SeekOrigin.Begin);

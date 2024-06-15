@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using x86Disasm;
 
 namespace x86CS.CPU

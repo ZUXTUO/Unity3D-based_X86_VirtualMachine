@@ -156,6 +156,7 @@ MonoBehaviour:
   UserData: 
   fps: 0
   fpsText: 
+  font: {fileID: 12800000, guid: 8446c91ff9e8ca7439553dd98b923235, type: 3}
   images:
     clearImage: {fileID: 2800000, guid: 112c6fcf56e349449ab2e6ad76b67816, type: 3}
     collapseImage: {fileID: 2800000, guid: 4623f326a884a2546ab39078bf7822c3, type: 3}
@@ -530,7 +531,6 @@ GameObject:
   - component: {fileID: 756670330}
   - component: {fileID: 756670329}
   - component: {fileID: 756670328}
-  - component: {fileID: 756670332}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -618,21 +618,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &756670332
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 756670327}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e050fce2b4174d42a45290bb72f5a80, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  image_1: {fileID: 1345716351}
-  image_2: {fileID: 1672498188}
-  memory_1: 0
-  memory_2: 0
 --- !u!1 &773935795
 GameObject:
   m_ObjectHideFlags: 0
@@ -782,6 +767,7 @@ GameObject:
   - component: {fileID: 1024841403}
   - component: {fileID: 1024841404}
   - component: {fileID: 1024841402}
+  - component: {fileID: 1024841405}
   m_Layer: 0
   m_Name: UnityManager
   m_TagString: Untagged
@@ -800,15 +786,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dcea8977bf35b14faa619fa692b5069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ImageName: M32.IMG
-  ImagePath: 
+  FloppyName: M32.IMG
+  VHD_Name: win95.img
+  ISO_Name: bootdisk.iso
   BiosName: BIOS-bochs-latest
   VgaBiosName: VGABIOS-lgpl-latest
-  MemorySize: 256
-  Type: 1
-  VHD_Name: TEST.vhd
+  MemorySize: 32
+  Type: 3
+  FloppyPath: 
   VHD_Path: 
-  ISO_Name: bootdisk.iso
   ISO_Path: 
 --- !u!4 &1024841403
 Transform:
@@ -835,7 +821,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CPU_Run: 0
-  HZ: 1500
+  HZ: 15000
+  VGA: {fileID: 1024841405}
+  NeedLoadVGA: 1
+--- !u!114 &1024841405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1024841401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e050fce2b4174d42a45290bb72f5a80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vgaTexture_1: {fileID: 0}
+  vgaTexture_2: {fileID: 0}
+  image_1: {fileID: 1345716351}
+  image_2: {fileID: 1672498188}
 --- !u!1 &1345716348
 GameObject:
   m_ObjectHideFlags: 0
@@ -920,7 +923,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1450291354
 RectTransform:
   m_ObjectHideFlags: 0
@@ -978,7 +981,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 756670332}
+      - m_Target: {fileID: 1024841405}
         m_MethodName: Test
         m_Mode: 1
         m_Arguments:

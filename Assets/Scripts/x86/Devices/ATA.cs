@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +14,7 @@ namespace x86CS.Devices
                                                0x170, 0x171, 0x172, 0x173, 0x174, 0x175, 0x176, 0x177,
                                                0x3f6, 0x376
                                            };
-        private readonly List<ATADrive> diskDrives = new List<ATADrive>();
+        public List<ATADrive> diskDrives = new List<ATADrive>();
 
         private byte[] deviceControl = new byte[2];
         private bool primarySelected;
@@ -39,12 +39,14 @@ namespace x86CS.Devices
             ATADrive newDrive;
             if (UnityManager.ins.Type == DriveType.HardDisk)
             {
+                UnityEngine.Debug.Log("虚拟硬盘");
                 newDrive = new HardDisk();
                 newDrive.LoadImage(UnityManager.ins.VHD_Path);
                 diskDrives.Add(newDrive);
             }
             else if (UnityManager.ins.Type == DriveType.CDROM)
             {
+                UnityEngine.Debug.Log("虚拟光驱");
                 newDrive = new CDROM();
                 newDrive.LoadImage(UnityManager.ins.ISO_Path);
                 diskDrives.Add(newDrive);

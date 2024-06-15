@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using x86Disasm;
 
 namespace x86CS.CPU
