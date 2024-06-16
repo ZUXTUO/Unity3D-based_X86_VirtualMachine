@@ -7,27 +7,6 @@ public class VGAController : MonoBehaviour
     public Texture2D vgaTexture_1, vgaTexture_2;
     public RawImage image_1, image_2;
 
-    //public int memory_1, memory_2;
-
-    //public Event e;
-
-    //private void Start()
-    //{
-        //vgaTexture_1 = new Texture2D(960, 544);
-        //vgaTexture_2 = new Texture2D(960, 544);
-    //}
-    /*
-    public static Color Convert(System.Drawing.Color drawingColor)
-    {
-        return new Color(
-            drawingColor.R / 255f,
-            drawingColor.G / 255f,
-            drawingColor.B / 255f,
-            drawingColor.A / 255f
-        );
-    }
-    */
-    //public void Update()
     public void Test()
     {
         if (UnityMain.ins.CPU_Run)
@@ -54,8 +33,6 @@ public class VGAController : MonoBehaviour
                 byte attribute = displayBuffer[i + 1];
                 int y = i / 160 * 16;
 
-                //System.Drawing.Color foreColour = UnityMain.ins.machine.vgaDevice.GetColour(attribute & 0xf);
-                //System.Drawing.Color backColour = UnityMain.ins.machine.vgaDevice.GetColour((attribute >> 4) & 0xf);
                 Color foreColour = UnityMain.ins.machine.vgaDevice.GetColour(attribute & 0xf);
                 Color backColour = UnityMain.ins.machine.vgaDevice.GetColour((attribute >> 4) & 0xf);
 
@@ -66,10 +43,8 @@ public class VGAController : MonoBehaviour
                     for (var j = 7; j >= 0; j--)
                     {
                         if (((fontBuffer[f] >> j) & 0x1) != 0)
-                            //vgaTexture_1.SetPixel(x, y, Convert(foreColour));
                             vgaTexture_1.SetPixel(x, y, foreColour);
                         else
-                            //vgaTexture_2.SetPixel(x, y, Convert(backColour));
                             vgaTexture_2.SetPixel(x, y, backColour);
                         x++;
                     }

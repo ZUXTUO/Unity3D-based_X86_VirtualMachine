@@ -110,30 +110,30 @@ namespace x86CS.Devices
                             UnityEngine.Debug.Log("可用的640K内存的低字节");
                             return 0x71; 
                         case 0x16:
-                            UnityEngine.Debug.Log("上述的高字节");
+                            //UnityEngine.Debug.Log("上述的高字节");
                             return 0x02; 
                         case 0x17:
-                            UnityEngine.Debug.Log("1M -> 65M 内存的低字节");
+                            //UnityEngine.Debug.Log("1M -> 65M 内存的低字节");
                             if (UnityManager.ins.MemorySize > 64)
                             {
-                                UnityEngine.Debug.Log("运行内存大于64M");
+                                //UnityEngine.Debug.Log("运行内存大于64M");
                                 return 0xff;
                             }
                             else
                             {
-                                UnityEngine.Debug.Log("运行内存小于64M");
+                                //UnityEngine.Debug.Log("运行内存小于64M");
                                 return (byte)(((UnityManager.ins.MemorySize - 1) * 1024));
                             }
                         case 0x18:
-                            UnityEngine.Debug.Log("上述的高字节");
+                            //UnityEngine.Debug.Log("上述的高字节");
                             if (UnityManager.ins.MemorySize > 64)
                             {
-                                UnityEngine.Debug.Log("运行内存大于64M");
+                                //UnityEngine.Debug.Log("运行内存大于64M");
                                 return 0xff;
                             }
                             else
                             {
-                                UnityEngine.Debug.Log("运行内存小于64M");
+                                //UnityEngine.Debug.Log("运行内存小于64M");
                                 return (byte)(((UnityManager.ins.MemorySize - 1) * 1024) >> 8);
                             }
                         case 0x19:
@@ -197,24 +197,24 @@ namespace x86CS.Devices
                         case 0x30:
                             if (UnityManager.ins.MemorySize > 64)
                             {
-                                UnityEngine.Debug.Log("运行内存大于64M");
+                                //UnityEngine.Debug.Log("运行内存大于64M");
                                 return 0xff;
                             }
                             else
                             {
-                                UnityEngine.Debug.Log("运行内存小于64M");
+                                //UnityEngine.Debug.Log("运行内存小于64M");
                                 return (byte)(((UnityManager.ins.MemorySize - 1) * 1024));
                             }
                         case 0x31:
                             UnityEngine.Debug.Log("上述的高字节");
                             if (UnityManager.ins.MemorySize > 64)
                             {
-                                UnityEngine.Debug.Log("运行内存大于64M");
+                                //UnityEngine.Debug.Log("运行内存大于64M");
                                 return 0xff;
                             }
                             else
                             {
-                                UnityEngine.Debug.Log("运行内存小于64M");
+                                //UnityEngine.Debug.Log("运行内存小于64M");
                                 return (byte)(((UnityManager.ins.MemorySize - 1) * 1024) >> 8);
                             }
                         case 0x32:
@@ -224,7 +224,7 @@ namespace x86CS.Devices
                             UnityEngine.Debug.Log("16MB 到 4GB 内存的低字节");
                             return (byte)(((UnityManager.ins.MemorySize - 16) * 1024 * 1024) >> 16);
                         case 0x35:
-                            UnityEngine.Debug.Log("上述的高字节");
+                            //UnityEngine.Debug.Log("上述的高字节");
                             return (byte)((((UnityManager.ins.MemorySize - 16) * 1024 * 1024) >> 16) >> 8);
                         case 0x3d:
                             UnityEngine.Debug.Log("第一和第二启动设备");

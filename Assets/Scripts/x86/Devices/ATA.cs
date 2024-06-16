@@ -102,8 +102,6 @@ namespace x86CS.Devices
             }
         }
 
-        #region IDevice Members
-
         public int[] PortsUsed
         {
             get { return portsUsed; }
@@ -300,7 +298,5 @@ namespace x86CS.Devices
                     break;
             }
         }
-
-        #endregion
     }
 }

@@ -36,7 +36,10 @@ public class UnityMain : MonoBehaviour
         CPU_Run = true;
         StartCoroutine(RunCpuCycle());
     }
-
+    /// <summary>
+    /// CPU运行+VGA输出
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator RunCpuCycle()
     {
         while (CPU_Run)
