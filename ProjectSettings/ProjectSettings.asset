@@ -307,7 +307,7 @@ PlayerSettings:
     m_EncodingQuality: 1
   m_BuildTargetGroupLightmapSettings:
   - m_BuildTarget: PSP2
-    m_TextureStreamingEnabled: 1
+    m_TextureStreamingEnabled: 0
     m_TextureStreamingPriority: 0
   - m_BuildTarget: Standalone
     m_TextureStreamingEnabled: 0
@@ -548,7 +548,7 @@ PlayerSettings:
   psp2SaveDataQuota: 10240
   psp2ParentalLevel: 1
   psp2ShortTitle: Lag
-  psp2ContentID: IV9501-ARID19545_00-0878756235PLKDEF
+  psp2ContentID: IV2551-CSVM86000_00-4878756235PLRDEG
   psp2Category: 0
   psp2MasterVersion: 01.00
   psp2AppVersion: 01.00
@@ -605,9 +605,9 @@ PlayerSettings:
   incrementalIl2cppBuild: {}
   allowUnsafeCode: 0
   additionalIl2CppArgs: 
-  scriptingRuntimeVersion: 1
+  scriptingRuntimeVersion: 0
   apiCompatibilityLevelPerPlatform:
-    PSP2: 1
+    PSP2: 2
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: Template_Lightweight

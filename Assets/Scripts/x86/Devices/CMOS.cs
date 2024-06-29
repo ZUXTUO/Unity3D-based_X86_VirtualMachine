@@ -84,7 +84,7 @@ namespace x86CS.Devices
                         case 0x0f:
                             return 0x00;
                         case 0x10:
-                            UnityEngine.Debug.Log("1.44M 软盘驱动器");
+                            //UnityEngine.Debug.Log("1.44M 软盘驱动器");
                             return 0x40;
                         case 0x12:
                             //UnityEngine.Debug.Log("检查硬盘数量(不超过两个)");

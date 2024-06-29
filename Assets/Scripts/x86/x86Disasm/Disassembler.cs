@@ -500,7 +500,7 @@ namespace x86Disasm
 
             if (currentInstruction.Type == InstructionType.Invalid)
             {
-                UnityEngine.Debug.Log("currentInstruction.Type == InstructionType.Invalid");
+                //UnityEngine.Debug.Log("currentInstruction.Type == InstructionType.Invalid");
             }
 
             if(buildString)

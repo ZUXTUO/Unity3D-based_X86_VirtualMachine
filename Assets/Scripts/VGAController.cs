@@ -1,18 +1,69 @@
 using UnityEngine;
 using UnityEngine.UI;
 using x86CS;
-using x86CS.Devices;
+/// <summary>
+/// 画面测试用
+/// </summary>
 public class VGAController : MonoBehaviour
 {
     public Texture2D vgaTexture_1, vgaTexture_2;
     public RawImage image_1, image_2;
 
-    public void Test()
+    public int width = 960, height = 544;
+
+    private Color[] clearPixels;
+
+    /// <summary>
+    /// 初始化
+    /// </summary>
+    private void Start()
+    {
+        InitializeTextures();
+    }
+    /// <summary>
+    /// 图像重置
+    /// </summary>
+    private void InitializeTextures()
+    {
+        vgaTexture_1 = new Texture2D(width, height);
+        vgaTexture_2 = new Texture2D(width, height);
+
+        clearPixels = new Color[width * height];
+        for (int i = 0; i < clearPixels.Length; i++)
+        {
+            clearPixels[i] = new Color(0f, 0f, 0f, 0f);
+        }
+    }
+    /// <summary>
+    /// 屏幕颜色清除
+    /// </summary>
+    public void Clear()
+    {
+        vgaTexture_1.SetPixels(clearPixels);
+        vgaTexture_2.SetPixels(clearPixels);
+    }
+    /// <summary>
+    /// 改变VGA更新
+    /// </summary>
+    public void ChangeUpdateLoop()
+    {
+        if (UnityMain.ins.NeedLoadVGA)
+        {
+            UnityMain.ins.NeedLoadVGA = false;
+        }
+        else
+        {
+            UnityMain.ins.NeedLoadVGA = true;
+        }
+    }
+    /// <summary>
+    /// 载入VGA画面
+    /// </summary>
+    public void LoadVGA()
     {
         if (UnityMain.ins.CPU_Run)
         {
-            vgaTexture_1 = new Texture2D(960, 544);
-            vgaTexture_2 = new Texture2D(960, 544);
+            //Clear();
 
             byte[] fontBuffer = new byte[0x2000];
             byte[] displayBuffer = new byte[0xfa0];
@@ -21,17 +72,15 @@ public class VGAController : MonoBehaviour
             Memory.BlockRead(0xa0000, fontBuffer, fontBuffer.Length);
             Memory.BlockRead(0xb8000, displayBuffer, displayBuffer.Length);
 
-            Color[] pixelColors_1 = new Color[960 * 544];
-            Color[] pixelColors_2 = new Color[960 * 544];
-
-            //int pixelIndex = 0;
+            Color[] pixels1 = vgaTexture_1.GetPixels();
+            Color[] pixels2 = vgaTexture_2.GetPixels();
 
             for (var i = 0; i < displayBuffer.Length; i += 2)
             {
                 int currChar = displayBuffer[i];
                 int fontOffset = currChar * 32;
                 byte attribute = displayBuffer[i + 1];
-                int y = i / 160 * 16;
+                int y = (i / 160) * 16;
 
                 Color foreColour = UnityMain.ins.machine.vgaDevice.GetColour(attribute & 0xf);
                 Color backColour = UnityMain.ins.machine.vgaDevice.GetColour((attribute >> 4) & 0xf);
@@ -43,91 +92,28 @@ public class VGAController : MonoBehaviour
                     for (var j = 7; j >= 0; j--)
                     {
                         if (((fontBuffer[f] >> j) & 0x1) != 0)
-                            vgaTexture_1.SetPixel(x, y, foreColour);
+                        {
+                            pixels1[y * width + x] = foreColour;
+                            pixels2[y * width + x] = Color.clear;
+                        }
                         else
-                            vgaTexture_2.SetPixel(x, y, backColour);
+                        {
+                            pixels1[y * width + x] = Color.clear;
+                            pixels2[y * width + x] = backColour;
+                        }
                         x++;
                     }
                     y++;
                 }
             }
 
+            vgaTexture_1.SetPixels(pixels1);
             vgaTexture_1.Apply();
+            vgaTexture_2.SetPixels(pixels2);
             vgaTexture_2.Apply();
+
             image_1.texture = vgaTexture_1;
             image_2.texture = vgaTexture_2;
-            /*
-            if (Input.GetKeyDown(KeyCode.Keypad0))
-            {
-                UnityMain.ins.machine.keyboard.KeyPress((uint)'0');
-                Debug.Log("down 0");
-            }
-            else if (Input.GetKeyUp(KeyCode.Keypad0))
-            {
-                UnityMain.ins.machine.keyboard.KeyUp((uint)'0');
-                Debug.Log("up 0");
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad1))
-            {
-                UnityMain.ins.machine.keyboard.KeyPress((uint)'1');
-                Debug.Log("down 1");
-            }
-            else if (Input.GetKeyUp(KeyCode.Keypad1))
-            {
-                UnityMain.ins.machine.keyboard.KeyUp((uint)'1');
-                Debug.Log("up 1");
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad2))
-            {
-                UnityMain.ins.machine.keyboard.KeyPress((uint)'2');
-                Debug.Log("down 2");
-            }
-            else if (Input.GetKeyUp(KeyCode.Keypad2))
-            {
-                UnityMain.ins.machine.keyboard.KeyUp((uint)'2');
-                Debug.Log("up 2");
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad3))
-            {
-                UnityMain.ins.machine.keyboard.KeyPress((uint)'3');
-                Debug.Log("down 3");
-            }
-            else if (Input.GetKeyUp(KeyCode.Keypad3))
-            {
-                UnityMain.ins.machine.keyboard.KeyUp((uint)'3');
-                Debug.Log("up 3");
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad4))
-            {
-                UnityMain.ins.machine.keyboard.KeyPress((uint)'4');
-                Debug.Log("down 4");
-            }
-            else if (Input.GetKeyUp(KeyCode.Keypad4))
-            {
-                UnityMain.ins.machine.keyboard.KeyUp((uint)'4');
-                Debug.Log("up 4");
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad5))
-            {
-                UnityMain.ins.machine.keyboard.KeyPress((uint)'5');
-                Debug.Log("down 5");
-            }
-            else if (Input.GetKeyUp(KeyCode.Keypad5))
-            {
-                UnityMain.ins.machine.keyboard.KeyUp((uint)'5');
-                Debug.Log("up 5");
-            }
-            else if (Input.GetKeyDown(KeyCode.Return))
-            {
-                UnityMain.ins.machine.keyboard.KeyPress((uint)'\r');
-                Debug.Log("down enter");
-            }
-            else if (Input.GetKeyUp(KeyCode.Return))
-            {
-                UnityMain.ins.machine.keyboard.KeyUp((uint)'\r');
-                Debug.Log("up enter");
-            }
-            */
         }
     }
 }

@@ -92,33 +92,5 @@ namespace x86CS
                     break;
             }
         }
-
-        /// <summary>
-        /// 内存导出
-        /// </summary>
-        public static void Load()
-        {
-            int startIndex = 0x7c00;
-            int length = 512;
-
-            if (startIndex + length > memory.Length)
-            {
-                UnityEngine.Debug.LogError("Index out of range.");
-                return;
-            }
-
-            System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder();
-
-            for (int i = startIndex; i < startIndex + length; i++)
-            {
-                stringBuilder.Append(memory[i].ToString("X2"));
-                stringBuilder.Append(" ");
-            }
-
-            UnityEngine.Debug.LogError("打印成功");
-
-            string filePath = UnityEngine.Application.dataPath + "/Bytes.txt";
-            File.WriteAllText(filePath, stringBuilder.ToString());
-        }
     }
 }

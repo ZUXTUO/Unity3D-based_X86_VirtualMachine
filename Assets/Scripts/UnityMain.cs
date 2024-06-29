@@ -50,7 +50,7 @@ public class UnityMain : MonoBehaviour
             }
             if (NeedLoadVGA)
             {
-                VGA.Test();
+                VGA.LoadVGA();
             }
             yield return null;
         }
@@ -63,13 +63,5 @@ public class UnityMain : MonoBehaviour
     {
         CPU_Run = false;
         StopCoroutine(RunCpuCycle());
-    }
-
-    /// <summary>
-    /// 内存输出
-    /// </summary>
-    public void Out()
-    {
-        Memory.Load();
     }
 }
