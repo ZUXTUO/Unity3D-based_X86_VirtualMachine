@@ -1,5 +1,3 @@
-//using System.Drawing;
-
 using UnityEngine;
 
 namespace x86CS.Devices

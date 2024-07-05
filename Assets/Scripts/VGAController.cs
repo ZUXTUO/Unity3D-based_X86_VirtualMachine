@@ -8,10 +8,22 @@ public class VGAController : MonoBehaviour
 {
     public Texture2D vgaTexture_1, vgaTexture_2;
     public RawImage image_1, image_2;
+    public bool vga_font, vga_back;
 
     public int width = 960, height = 544;
 
-    private Color[] clearPixels;
+    Color[] clearPixels;
+
+    byte[] fontBuffer = new byte[0x2000];
+    byte[] displayBuffer = new byte[0xfa0];
+
+    Color[] pixels1 = new Color[0];
+    Color[] pixels2 = new Color[0];
+    Color foreColour;
+    Color backColour;
+
+    //第一帧检测--测试用
+    private bool FirstFrame = true;
 
     /// <summary>
     /// 初始化
@@ -39,8 +51,18 @@ public class VGAController : MonoBehaviour
     /// </summary>
     public void Clear()
     {
-        vgaTexture_1.SetPixels(clearPixels);
-        vgaTexture_2.SetPixels(clearPixels);
+        try
+        {
+            if (vga_font)
+            {
+                vgaTexture_1.SetPixels(clearPixels);
+            }
+            if (vga_back)
+            {
+                vgaTexture_2.SetPixels(clearPixels);
+            }
+        }
+        catch { }
     }
     /// <summary>
     /// 改变VGA更新
@@ -63,17 +85,25 @@ public class VGAController : MonoBehaviour
     {
         if (UnityMain.ins.CPU_Run)
         {
-            //Clear();
+            if (FirstFrame)
+            {
+                FirstFrame = false;
+                Clear();
+            }
 
-            byte[] fontBuffer = new byte[0x2000];
-            byte[] displayBuffer = new byte[0xfa0];
+            if (vga_font)
+            {
+                //前
+                Memory.BlockRead(0xa0000, fontBuffer, fontBuffer.Length);
+            }
+            if (vga_back)
+            {
+                //后
+                Memory.BlockRead(0xb8000, displayBuffer, displayBuffer.Length);
+            }
 
-            // 从内存中读取数据
-            Memory.BlockRead(0xa0000, fontBuffer, fontBuffer.Length);
-            Memory.BlockRead(0xb8000, displayBuffer, displayBuffer.Length);
-
-            Color[] pixels1 = vgaTexture_1.GetPixels();
-            Color[] pixels2 = vgaTexture_2.GetPixels();
+            pixels1 = vgaTexture_1.GetPixels();
+            pixels2 = vgaTexture_2.GetPixels();
 
             for (var i = 0; i < displayBuffer.Length; i += 2)
             {
@@ -82,8 +112,8 @@ public class VGAController : MonoBehaviour
                 byte attribute = displayBuffer[i + 1];
                 int y = (i / 160) * 16;
 
-                Color foreColour = UnityMain.ins.machine.vgaDevice.GetColour(attribute & 0xf);
-                Color backColour = UnityMain.ins.machine.vgaDevice.GetColour((attribute >> 4) & 0xf);
+                foreColour = UnityMain.ins.machine.vgaDevice.GetColour(attribute & 0xf);
+                backColour = UnityMain.ins.machine.vgaDevice.GetColour((attribute >> 4) & 0xf);
 
                 for (var f = fontOffset; f < fontOffset + 16; f++)
                 {
@@ -107,13 +137,48 @@ public class VGAController : MonoBehaviour
                 }
             }
 
-            vgaTexture_1.SetPixels(pixels1);
-            vgaTexture_1.Apply();
-            vgaTexture_2.SetPixels(pixels2);
-            vgaTexture_2.Apply();
-
-            image_1.texture = vgaTexture_1;
-            image_2.texture = vgaTexture_2;
+            if (vga_font)
+            {
+                vgaTexture_1.SetPixels(pixels1);
+                vgaTexture_1.Apply();
+                image_1.texture = vgaTexture_1;
+            }
+            if (vga_back)
+            {
+                vgaTexture_2.SetPixels(pixels2);
+                vgaTexture_2.Apply();
+                image_2.texture = vgaTexture_2;
+            }
         }
+    }
+    /// <summary>
+    /// 前
+    /// </summary>
+    public void Font()
+    {
+        vga_font = true;
+        vga_back = false;
+        image_1.gameObject.SetActive(true);
+        image_2.gameObject.SetActive(false);
+    }
+    /// <summary>
+    /// 后
+    /// </summary>
+    public void Back()
+    {
+        vga_font = false;
+        vga_back = true;
+        image_1.gameObject.SetActive(false);
+        image_2.gameObject.SetActive(true);
+    }
+    /// <summary>
+    /// 全
+    /// </summary>
+    public void All()
+    {
+        vga_font = true;
+        vga_back = true;
+        image_1.gameObject.SetActive(true);
+        image_2.gameObject.SetActive(true);
     }
 }

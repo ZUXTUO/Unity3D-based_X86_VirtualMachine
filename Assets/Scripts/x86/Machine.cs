@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using x86CS.Devices;
-using x86CS.Configuration;
-using x86CS.ATADevice;
 
 namespace x86CS
 {

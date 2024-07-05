@@ -1,6 +1,3 @@
-using x86CS;
-using x86CS.Devices;
-using x86CS.Configuration;
 using UnityEngine;
 using System.IO;
 
@@ -10,7 +7,6 @@ public class UnityManager : MonoBehaviour
     public void Awake()
     {
         ins = this;
-        DontDestroyOnLoad(gameObject);
 
         DiskLoad();//载入虚拟硬盘信息
     }

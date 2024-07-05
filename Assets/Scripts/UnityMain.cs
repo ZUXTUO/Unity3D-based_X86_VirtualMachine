@@ -1,9 +1,7 @@
 using x86CS;
-using x86CS.Devices;
-using x86CS.Configuration;
 using UnityEngine;
-using System.Threading;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class UnityMain : MonoBehaviour
 {
@@ -29,39 +27,86 @@ public class UnityMain : MonoBehaviour
     /// </summary>
     public void Load()
     {
-        machine = new Machine();
-        UnityManager.ins.MemorySize = 256;
-        machine.Running = true;
-        machine.Start();
-        CPU_Run = true;
-        StartCoroutine(RunCpuCycle());
+        if (!CPU_Run)
+        {
+            machine = new Machine();
+            UnityManager.ins.MemorySize = 256;
+            machine.Running = true;
+            machine.Start();
+            CPU_Run = true;
+            StartCoroutine(RunCpuCycle());
+            StartCoroutine(RunVGA());
+        }
+        else
+        {
+            Debug.Log("关机");
+            OnApplicationQuit();
+        }
     }
+
+    private System.Threading.Thread thread;
+    private bool isThreadRunning = false;
     /// <summary>
     /// CPU运行+VGA输出
     /// </summary>
     /// <returns></returns>
     private IEnumerator RunCpuCycle()
     {
+        // 检查线程是否正在运行，避免重复启动
+        if (isThreadRunning)
+        {
+            yield break;
+        }
+
+        isThreadRunning = true;
+
+        // 创建新的线程来执行功能
+        thread = new System.Threading.Thread(ThreadFunction);
+        thread.Start();
+    }
+    /// <summary>
+    /// 线程执行
+    /// </summary>
+    private void ThreadFunction()
+    {
         while (CPU_Run)
         {
-            for(int a = 0; a < HZ; a++)
-            {
-                machine.RunCycle();
-            }
+            machine.RunCycle();
+        }
+    }
+    /// <summary>
+    /// VGA信息输出
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator RunVGA()
+    {
+        while (CPU_Run)
+        {
             if (NeedLoadVGA)
             {
                 VGA.LoadVGA();
             }
-            yield return null;
+            yield return new WaitForSeconds(0.5f);
         }
     }
 
     /// <summary>
     /// 关闭
     /// </summary>
-    public void OnApplicationQuit()
+    private void OnApplicationQuit()
     {
         CPU_Run = false;
         StopCoroutine(RunCpuCycle());
+        StopCoroutine(RunVGA());
+
+        machine.Running = false;
+        machine.Stop();
+
+        isThreadRunning = false;
+        thread.Abort();
+        thread = null;
+
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentSceneIndex);
     }
 }

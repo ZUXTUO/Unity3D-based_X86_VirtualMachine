@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using x86CS.Configuration;
 
 namespace x86CS.Devices
 {

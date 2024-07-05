@@ -1,5 +1,3 @@
-using System;
-
 namespace x86CS.Devices
 {
     public class DMAController : IDevice

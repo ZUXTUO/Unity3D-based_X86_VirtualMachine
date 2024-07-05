@@ -1,7 +1,4 @@
 using System;
-using x86CS.Configuration;
-using x86CS.ATADevice;
-using System.Collections.Generic;
 
 namespace x86CS.Devices
 {
@@ -41,33 +38,33 @@ namespace x86CS.Devices
             switch (addr)
             {
                 case 0x70:
-                    UnityEngine.Debug.Log("只写");
+                    //UnityEngine.Debug.Log("只写");
 
-             ret = 0xff;
+                    ret = 0xff;
                     break;
                 case 0x71:
                     switch (currentReg)
                     {
                         case 0x00:
-                            UnityEngine.Debug.Log("返回当前时间的秒数");
-                            return Util.ToBCD(currTime.Second); 
+                            //UnityEngine.Debug.Log("返回当前时间的秒数");
+                            return Util.ToBCD(currTime.Second);
                         case 0x02:
-                            UnityEngine.Debug.Log("返回当前时间的分钟数");
-                            return Util.ToBCD(currTime.Minute); 
+                            //UnityEngine.Debug.Log("返回当前时间的分钟数");
+                            return Util.ToBCD(currTime.Minute);
                         case 0x04:
-                            UnityEngine.Debug.Log("返回当前时间的小时数");
-                            return Util.ToBCD(currTime.Hour); 
+                            //UnityEngine.Debug.Log("返回当前时间的小时数");
+                            return Util.ToBCD(currTime.Hour);
                         case 0x06:
-                            UnityEngine.Debug.Log("返回当前时间的星期几");
-                            return Util.ToBCD((int)currTime.DayOfWeek); 
+                            //UnityEngine.Debug.Log("返回当前时间的星期几");
+                            return Util.ToBCD((int)currTime.DayOfWeek);
                         case 0x07:
-                            UnityEngine.Debug.Log("返回当前时间的日期");
+                            //UnityEngine.Debug.Log("返回当前时间的日期");
                             return Util.ToBCD(currTime.Day);
                         case 0x08:
-                            UnityEngine.Debug.Log("返回当前时间的月份");
+                            //UnityEngine.Debug.Log("返回当前时间的月份");
                             return Util.ToBCD(currTime.Month);
                         case 0x09:
-                            UnityEngine.Debug.Log("返回当前时间的年份的后两位");
+                            //UnityEngine.Debug.Log("返回当前时间的年份的后两位");
                             return Util.ToBCD(currTime.Year % 100);
                         case 0x0a:
                             UnityEngine.Debug.Log("返回状态A");
@@ -95,7 +92,7 @@ namespace x86CS.Devices
                                     return 0xf0;
                                 case 2:
                                     UnityEngine.Debug.Log("如果有两个硬盘，则返回0xff");
-                                    return 0xff; 
+                                    return 0xff;
                                 default:
                                     UnityEngine.Debug.Log("虚拟硬盘数量不正确");
                                     return 0;
@@ -107,11 +104,11 @@ namespace x86CS.Devices
                             UnityEngine.Debug.Log("机器配置字节");
                             return 0x05;
                         case 0x15:
-                            UnityEngine.Debug.Log("可用的640K内存的低字节");
-                            return 0x71; 
+                            //UnityEngine.Debug.Log("可用的640K内存的低字节");
+                            return 0x71;
                         case 0x16:
                             //UnityEngine.Debug.Log("上述的高字节");
-                            return 0x02; 
+                            return 0x02;
                         case 0x17:
                             //UnityEngine.Debug.Log("1M -> 65M 内存的低字节");
                             if (UnityManager.ins.MemorySize > 64)
@@ -206,7 +203,7 @@ namespace x86CS.Devices
                                 return (byte)(((UnityManager.ins.MemorySize - 1) * 1024));
                             }
                         case 0x31:
-                            UnityEngine.Debug.Log("上述的高字节");
+                            //UnityEngine.Debug.Log("上述的高字节");
                             if (UnityManager.ins.MemorySize > 64)
                             {
                                 //UnityEngine.Debug.Log("运行内存大于64M");
@@ -218,10 +215,10 @@ namespace x86CS.Devices
                                 return (byte)(((UnityManager.ins.MemorySize - 1) * 1024) >> 8);
                             }
                         case 0x32:
-                            UnityEngine.Debug.Log("返回当前时间的年份的前两位");
-                            return Util.ToBCD(currTime.Year / 100); 
+                            //UnityEngine.Debug.Log("返回当前时间的年份的前两位");
+                            return Util.ToBCD(currTime.Year / 100);
                         case 0x34:
-                            UnityEngine.Debug.Log("16MB 到 4GB 内存的低字节");
+                            //UnityEngine.Debug.Log("16MB 到 4GB 内存的低字节");
                             return (byte)(((UnityManager.ins.MemorySize - 16) * 1024 * 1024) >> 16);
                         case 0x35:
                             //UnityEngine.Debug.Log("上述的高字节");
