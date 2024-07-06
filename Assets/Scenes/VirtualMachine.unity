@@ -952,7 +952,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dcea8977bf35b14faa619fa692b5069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FloppyName: kolibri.img
+  FloppyName: boot.img
   VHD_Name: win95.img
   ISO_Name: test.iso
   BiosName: BIOS-bochs-latest
@@ -987,7 +987,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CPU_Run: 0
-  HZ: 15000
   VGA: {fileID: 1024841405}
   NeedLoadVGA: 0
 --- !u!114 &1024841405

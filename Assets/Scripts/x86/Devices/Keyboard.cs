@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace x86CS.Devices
 {
@@ -18,11 +19,11 @@ namespace x86CS.Devices
 
     public class KeyboardDevice : IDevice, INeedsIRQ
     {
-        private readonly int[] portsUsed = {0x60, 0x64};
+        private readonly int[] portsUsed = { 0x60, 0x64 };
         private byte inputBuffer;
         private byte commandByte;
         private KeyboardFlags statusRegister;
-        private bool enabled;
+        private bool enabled = true;
         private bool setCommandByte;
         private Queue<byte> outputBuffer;
 
@@ -56,21 +57,31 @@ namespace x86CS.Devices
         {
             outputBuffer.Enqueue((byte)scancode);
             statusRegister |= KeyboardFlags.OutputBufferFull;
-            OnIRQ(new EventArgs());
+            ProcessInput();
         }
 
         public void KeyUp(uint scancode)
         {
             outputBuffer.Enqueue((byte)(scancode + 0x80));
             statusRegister |= KeyboardFlags.OutputBufferFull;
-            OnIRQ(new EventArgs());
+            ProcessInput();
+        }
+
+        private void ProcessInput()
+        {
+            if (outputBuffer.Count > 0)
+            {
+                OnIRQ(new EventArgs());
+            }
         }
 
         private void OnIRQ(EventArgs e)
         {
             EventHandler handler = IRQ;
-            if (handler != null) 
+            if (handler != null)
+            {
                 handler(this, e);
+            }
         }
 
         private void SetStatusCode(byte status)
@@ -88,7 +99,6 @@ namespace x86CS.Devices
             }
             else
             {
-
                 switch (inputBuffer)
                 {
                     case 0x60:
@@ -119,30 +129,30 @@ namespace x86CS.Devices
                 }
             }
         }
-        /*
-        public void Cycle()
-        {
-            if (outputBuffer.Count != 0)
-                OnIRQ(new EventArgs());
-        }
-        */
+
         public uint Read(ushort address, int size)
         {
             switch (address)
             {
                 case 0x60:
                     if (outputBuffer.Count == 0)
+                    {
                         return 0;
+                    }
+
                     byte ret = setCommandByte ? commandByte : outputBuffer.Dequeue();
 
                     if (outputBuffer.Count == 0)
+                    {
                         statusRegister &= ~KeyboardFlags.OutputBufferFull;
+                    }
+
                     setCommandByte = false;
+                    ProcessInput();
                     return ret;
                 case 0x64:
-                    return (ushort) statusRegister;
+                    return (ushort)statusRegister;
                 default:
-                    //System.Diagnostics.Debugger.Break();
                     break;
             }
 
@@ -155,9 +165,13 @@ namespace x86CS.Devices
             {
                 case 0x60:
                     if (setCommandByte)
+                    {
                         commandByte = (byte)value;
+                    }
                     else
+                    {
                         inputBuffer = (byte)value;
+                    }
 
                     statusRegister &= ~KeyboardFlags.CommandFlag;
                     ProcessCommand();
