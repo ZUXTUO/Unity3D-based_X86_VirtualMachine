@@ -27,7 +27,7 @@ Unity 2018.3.0a2をベースにしています。<br>
 
 ![image](IMG/image.gif)
 
-*using kolibrios<br><br>
+*Use my own small os written in nasm.<br><br>
 
 ![image](IMG/image1.jpg)
 ![image](IMG/image2.jpg)
