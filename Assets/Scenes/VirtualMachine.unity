@@ -649,6 +649,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 468271548}
+        m_MethodName: set_interactable
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!114 &468271549
 MonoBehaviour:
@@ -903,11 +914,11 @@ Camera:
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
-  m_HDR: 0
-  m_AllowMSAA: 0
-  m_AllowDynamicResolution: 0
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 1
   m_ForceIntoRT: 0
-  m_OcclusionCulling: 0
+  m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
 --- !u!4 &963194228
@@ -952,12 +963,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dcea8977bf35b14faa619fa692b5069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FloppyName: boot.img
-  VHD_Name: win95.img
-  ISO_Name: test.iso
+  ImgName: test.img
   BiosName: BIOS-bochs-latest
   VgaBiosName: VGABIOS-lgpl-latest
-  MemorySize: 256
+  MemorySize: 64
   Type: 3
   FloppyPath: 
   VHD_Path: 
@@ -989,6 +998,7 @@ MonoBehaviour:
   CPU_Run: 0
   VGA: {fileID: 1024841405}
   NeedLoadVGA: 0
+  NeedLog: 0
 --- !u!114 &1024841405
 MonoBehaviour:
   m_ObjectHideFlags: 0

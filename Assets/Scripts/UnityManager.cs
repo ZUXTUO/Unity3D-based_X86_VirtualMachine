@@ -4,19 +4,15 @@ using System.IO;
 public class UnityManager : MonoBehaviour
 {
     public static UnityManager ins;
-    public void Awake()
+    public void Start()
     {
         ins = this;
 
         DiskLoad();//载入虚拟硬盘信息
     }
 
-    [Header("虚拟软盘名")]
-    public string FloppyName;
-    [Header("虚拟硬盘名称")]
-    public string VHD_Name;
-    [Header("虚拟光盘名称")]
-    public string ISO_Name;
+    [Header("镜像名(软盘/硬盘/光盘)")]
+    public string ImgName;
     [Header("BIOS名")]
     public string BiosName;
     [Header("VGABIOS名")]
@@ -44,30 +40,45 @@ public class UnityManager : MonoBehaviour
 
         if (Type == x86CS.Configuration.DriveType.Floppy)
         {
-            if (FloppyName != null)
+            if (ImgName != null)
             {
-                FloppyPath = Directory.GetCurrentDirectory() + "/IMG/" + FloppyName;
+                FloppyPath = Directory.GetCurrentDirectory() + "/IMG/" + ImgName;
                 Img_stream = new FileStream(FloppyPath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-                UnityEngine.Debug.Log("Floppy: "+ FloppyPath);
+
+                if (UnityMain.ins.NeedLog)
+                {
+                    UnityEngine.Debug.Log("Floppy: "+ FloppyPath);
+                }
             }
         }
         else if (Type == x86CS.Configuration.DriveType.HardDisk)
         {
-            if (VHD_Name != null)
+            if (ImgName != null)
             {
-                UnityEngine.Debug.Log("虚拟硬盘初步载入完成");
-                VHD_Path = Directory.GetCurrentDirectory() + "/IMG/" + VHD_Name;
+                if (UnityMain.ins.NeedLog)
+                {
+                    UnityEngine.Debug.Log("虚拟硬盘初步载入完成");
+                }
+                VHD_Path = Directory.GetCurrentDirectory() + "/IMG/" + ImgName;
                 Img_stream = new FileStream(VHD_Path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-                UnityEngine.Debug.Log("HardDisk: " + VHD_Path);
+                
+                if (UnityMain.ins.NeedLog)
+                {
+                    UnityEngine.Debug.Log("HardDisk: " + VHD_Path);
+                }
             }
         }
         else if (Type == x86CS.Configuration.DriveType.CDROM)
         {
-            if (ISO_Name != null)
+            if (ImgName != null)
             {
-                ISO_Path = Directory.GetCurrentDirectory() + "/IMG/" + ISO_Name;
+                ISO_Path = Directory.GetCurrentDirectory() + "/IMG/" + ImgName;
                 Img_stream = new FileStream(ISO_Path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-                UnityEngine.Debug.Log("ISO: " + ISO_Path);
+                
+                if (UnityMain.ins.NeedLog)
+                {
+                    UnityEngine.Debug.Log("ISO: " + ISO_Path);
+                }
             }
         }
 #elif UNITY_PSP2
@@ -76,30 +87,45 @@ public class UnityManager : MonoBehaviour
 
         if (Type == x86CS.Configuration.DriveType.Floppy)
         {
-            if (FloppyName != null)
+            if (ImgName != null)
             {
-                FloppyPath = "/ux0:/IMG/" + FloppyName;
+                FloppyPath = "/ux0:/IMG/" + ImgName;
                 Img_stream = new FileStream(FloppyPath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-                UnityEngine.Debug.Log("Floppy: " + FloppyPath);
+                
+                if (UnityMain.ins.NeedLog)
+                {
+                    UnityEngine.Debug.Log("Floppy: " + FloppyPath);
+                }
             }
         }
         else if (Type == x86CS.Configuration.DriveType.HardDisk)
         {
-            if (VHD_Name != null)
+            if (ImgName != null)
             {
-                UnityEngine.Debug.Log("虚拟硬盘初步载入完成");
-                VHD_Path = "/ux0:/IMG/" + VHD_Name;
+                if (UnityMain.ins.NeedLog)
+                {
+                    UnityEngine.Debug.Log("虚拟硬盘初步载入完成");
+                }
+                VHD_Path = "/ux0:/IMG/" + ImgName;
                 Img_stream = new FileStream(VHD_Path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-                UnityEngine.Debug.Log("HardDisk: " + VHD_Path);
+                
+                if (UnityMain.ins.NeedLog)
+                {
+                    UnityEngine.Debug.Log("HardDisk: " + VHD_Path);
+                }
             }
         }
         else if (Type == x86CS.Configuration.DriveType.CDROM)
         {
-            if (ISO_Name != null)
+            if (ImgName != null)
             {
-                ISO_Path = "/ux0:/IMG/" + ISO_Name;
+                ISO_Path = "/ux0:/IMG/" + ImgName;
                 Img_stream = new FileStream(ISO_Path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-                UnityEngine.Debug.Log("ISO: " + ISO_Path);
+                
+                if (UnityMain.ins.NeedLog)
+                {
+                    UnityEngine.Debug.Log("ISO: " + ISO_Path);
+                }
             }
         }
 #endif

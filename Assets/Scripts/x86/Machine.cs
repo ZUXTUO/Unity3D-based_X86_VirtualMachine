@@ -48,18 +48,21 @@ namespace x86CS
             if (UnityManager.ins.Type == Configuration.DriveType.Floppy)
             {
                 devices = new IDevice[]
-                          {
-                              FloppyDrive, new CMOS(ataDevice), new Misc(), new PIT8253(), picDevice, keyboard, dmaController, vgaDevice
-                          };
+                {
+                    FloppyDrive, new CMOS(ataDevice), new Misc(), new PIT8253(), picDevice, keyboard, dmaController, vgaDevice
+                };
             }
             else if (UnityManager.ins.Type == Configuration.DriveType.HardDisk || UnityManager.ins.Type == Configuration.DriveType.CDROM)
             {
                 devices = new IDevice[]
-                          {
-                              ataDevice, new CMOS(ataDevice), new Misc(), new PIT8253(), picDevice, keyboard, dmaController, vgaDevice
-                          };
+                {
+                    ataDevice, new CMOS(ataDevice), new Misc(), new PIT8253(), picDevice, keyboard, dmaController, vgaDevice
+                };
 
-                UnityEngine.Debug.Log("虚拟硬盘/光驱数量：" + ataDevice.diskDrives.Count);
+                if (UnityMain.ins.NeedLog)
+                {
+                    UnityEngine.Debug.Log("虚拟硬盘/光驱数量：" + ataDevice.diskDrives.Count);
+                }
             }
 
             CPU = new CPU.CPU();

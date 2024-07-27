@@ -86,8 +86,11 @@ namespace x86CS.ATADevice
             identifyBuffer[6] = identifyBuffer[56] = footer.SectorsPerCylinder;
             identifyBuffer[57] = identifyBuffer[60] = (ushort)(footer.CurrentSize / 512);
             identifyBuffer[58] = identifyBuffer[61] = (ushort)((footer.CurrentSize / 512) >> 16);
-
-            UnityEngine.Debug.Log("虚拟硬盘初步载入完成");
+           
+            if (UnityMain.ins.NeedLog)
+            {
+                UnityEngine.Debug.Log("虚拟硬盘初步载入完成");
+            }
         }
 
         public override void Reset()

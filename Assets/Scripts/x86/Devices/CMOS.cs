@@ -67,16 +67,16 @@ namespace x86CS.Devices
                             //UnityEngine.Debug.Log("返回当前时间的年份的后两位");
                             return Util.ToBCD(currTime.Year % 100);
                         case 0x0a:
-                            UnityEngine.Debug.Log("返回状态A");
+                            if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("返回状态A"); }
                             return statusA;
                         case 0x0b:
-                            UnityEngine.Debug.Log("返回状态B");
+                            if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("返回状态B"); }
                             return statusB;
                         case 0x0c:
-                            UnityEngine.Debug.Log("返回状态C");
+                            if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("返回状态C"); }
                             return statusC;
                         case 0x0d:
-                            UnityEngine.Debug.Log("返回状态D");
+                            if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("返回状态D"); }
                             return statusD;
                         case 0x0f:
                             return 0x00;
@@ -88,20 +88,20 @@ namespace x86CS.Devices
                             switch (ataDevice.HardDrives.Length)
                             {
                                 case 1:
-                                    UnityEngine.Debug.Log("如果只有一个硬盘，则返回0xf0");
+                                    if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("如果只有一个硬盘，则返回0xf0"); }
                                     return 0xf0;
                                 case 2:
-                                    UnityEngine.Debug.Log("如果有两个硬盘，则返回0xff");
+                                    if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("如果有两个硬盘，则返回0xff"); }
                                     return 0xff;
                                 default:
-                                    UnityEngine.Debug.Log("虚拟硬盘数量不正确");
+                                    if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("虚拟硬盘数量不正确"); }
                                     return 0;
                             }
                         case 0x13:
-                            UnityEngine.Debug.Log("键盘重复速率");
+                            if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("键盘重复速率"); }
                             return 0;
                         case 0x14:
-                            UnityEngine.Debug.Log("机器配置字节");
+                            if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("机器配置字节"); }
                             return 0x05;
                         case 0x15:
                             //UnityEngine.Debug.Log("可用的640K内存的低字节");
@@ -136,58 +136,58 @@ namespace x86CS.Devices
                         case 0x19:
                             if (ataDevice.HardDrives.Length == 0)
                             {
-                                UnityEngine.Debug.Log("没有虚拟硬盘");
+                                if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("没有虚拟硬盘"); }
                                 return 0;
                             }
                             return 47;
                         case 0x1a:
                             if (ataDevice.HardDrives.Length < 2)
                             {
-                                UnityEngine.Debug.Log("虚拟硬盘数量小于2");
+                                if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("虚拟硬盘数量小于2"); }
                                 return 0;
                             }
                             return 47;
                         case 0x1b:
-                            UnityEngine.Debug.Log("HDD1 - 柱面数低字节");
+                            if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("HDD1 - 柱面数低字节"); }
                             if (ataDevice.HardDrives.Length == 0)
                             {
-                                UnityEngine.Debug.Log("没有虚拟硬盘");
+                                if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("没有虚拟硬盘"); }
                                 return 0;
                             }
                             return (byte)ataDevice.HardDrives[0].Cylinders;
                         case 0x1c:
-                            UnityEngine.Debug.Log("HDD1 - 柱面数高字节");
+                            if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("HDD1 - 柱面数高字节"); }
                             if (ataDevice.HardDrives.Length == 0)
                             {
-                                UnityEngine.Debug.Log("没有虚拟硬盘");
+                                if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("没有虚拟硬盘"); }
                                 return 0;
                             }
                             return (byte)(ataDevice.HardDrives[0].Cylinders >> 8);
                         case 0x1d:
-                            UnityEngine.Debug.Log("HDD1 - 磁头数");
+                            if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("HDD1 - 磁头数"); }
                             if (ataDevice.HardDrives.Length == 0)
                             {
-                                UnityEngine.Debug.Log("没有虚拟硬盘");
+                                if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("没有虚拟硬盘"); }
                                 return 0;
                             }
                             return ataDevice.HardDrives[0].Heads;
                         case 0x1e:
                         case 0x1f:
-                            UnityEngine.Debug.Log("HDD 预补偿 - 未使用");
+                            if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("HDD 预补偿 - 未使用"); }
                             return 0;
                         case 0x20:
-                            UnityEngine.Debug.Log("HDD1 驱动器控制字节");
+                            if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("HDD1 驱动器控制字节"); }
                             return 0x08;
                         case 0x21:
-                            UnityEngine.Debug.Log("HDD 着陆区 - 未使用");
+                            if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("HDD 着陆区 - 未使用"); }
                             return 0;
                         case 0x22:
                             return 0;
                         case 0x23:
-                            UnityEngine.Debug.Log("HDD1 - 扇区数");
+                            if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("HDD1 - 扇区数"); }
                             if (ataDevice.HardDrives.Length == 0)
                             {
-                                UnityEngine.Debug.Log("没有虚拟硬盘");
+                                if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("没有虚拟硬盘"); }
                                 return 0;
                             }
                             return ataDevice.HardDrives[0].Sectors;
@@ -224,13 +224,13 @@ namespace x86CS.Devices
                             //UnityEngine.Debug.Log("上述的高字节");
                             return (byte)((((UnityManager.ins.MemorySize - 16) * 1024 * 1024) >> 16) >> 8);
                         case 0x3d:
-                            UnityEngine.Debug.Log("第一和第二启动设备");
+                            if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("第一和第二启动设备"); }
                             return 0x21;
                         case 0x38:
-                            UnityEngine.Debug.Log("第三启动设备");
+                            if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("第三启动设备"); }
                             return 0x00;
                         case 0x39:
-                            UnityEngine.Debug.Log("HDD0 翻译模式，我们选择 LBA");
+                            if (UnityMain.ins.NeedLog) { UnityEngine.Debug.Log("HDD0 翻译模式，我们选择 LBA"); }
                             return 0x1;
                         case 0x5b:
                             return 0x00;

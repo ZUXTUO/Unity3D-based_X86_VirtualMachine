@@ -36,14 +36,20 @@ namespace x86CS.Devices
             ATADrive newDrive;
             if (UnityManager.ins.Type == DriveType.HardDisk)
             {
-                UnityEngine.Debug.Log("虚拟硬盘");
+                if (UnityMain.ins.NeedLog)
+                {
+                    UnityEngine.Debug.Log("虚拟硬盘");
+                }
                 newDrive = new HardDisk();
                 newDrive.LoadImage(UnityManager.ins.VHD_Path);
                 diskDrives.Add(newDrive);
             }
             else if (UnityManager.ins.Type == DriveType.CDROM)
             {
-                UnityEngine.Debug.Log("虚拟光驱");
+                if (UnityMain.ins.NeedLog)
+                {
+                    UnityEngine.Debug.Log("虚拟光驱");
+                }
                 newDrive = new CDROM();
                 newDrive.LoadImage(UnityManager.ins.ISO_Path);
                 diskDrives.Add(newDrive);

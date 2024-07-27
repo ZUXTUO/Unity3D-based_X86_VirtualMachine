@@ -68,7 +68,11 @@ namespace x86CS.Devices
         public bool MountImage()
         {
             floppyReader = new BinaryReader(UnityManager.ins.Img_stream);
-            UnityEngine.Debug.Log("导入内存中的软盘内容");
+
+            if (UnityMain.ins.NeedLog)
+            {
+                UnityEngine.Debug.Log("导入内存中的软盘内容");
+            }
 
             return true;
         }
