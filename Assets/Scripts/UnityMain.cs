@@ -17,6 +17,8 @@ public class UnityMain : MonoBehaviour
     public bool NeedLoadVGA = true;
     [Header("是否需要Log输出")]
     public bool NeedLog = true;
+    [Header("CPU时钟")]
+    public int Cycle = 1000;
 
     public void Awake()
     {
@@ -31,10 +33,10 @@ public class UnityMain : MonoBehaviour
         if (!CPU_Run)
         {
             machine = new Machine();
-            UnityManager.ins.MemorySize = 256;
             machine.Running = true;
             machine.Start();
             CPU_Run = true;
+            NeedLoadVGA = true;
             StartCoroutine(RunCpuCycle());
             StartCoroutine(RunVGA());
         }
@@ -56,11 +58,11 @@ public class UnityMain : MonoBehaviour
     {
         while (CPU_Run)
         {
-            for (int a = 0; a < 1000; a++)
+            for (int a = 0; a < Cycle; a++)
             {
                 machine.RunCycle();
             }
-            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(0.001f);
         }
     }
     /// <summary>
@@ -75,7 +77,7 @@ public class UnityMain : MonoBehaviour
             {
                 VGA.LoadVGA();
             }
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.1f);
         }
     }
     /*
